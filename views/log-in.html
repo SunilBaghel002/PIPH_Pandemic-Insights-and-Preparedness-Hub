@@ -1,11 +1,819 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>This is a login form</h1>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pandemic Response - Login</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 100%);
+        color: #333;
+        line-height: 1.6;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #e9ecef;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(37, 99, 235, 0.5);
+        border-radius: 5px;
+        transition: background 0.3s ease;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(37, 99, 235, 0.7);
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .login-section {
+        min-height: 100vh;
+        background-color: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .login-container {
+        border: 2px solid #2563eb;
+        border-radius: 20px;
+        padding: 40px;
+        background-color: #ffffff;
+        width: 100%;
+        max-width: 450px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .login-container h1 {
+        font-size: 2.5em;
+        margin-bottom: 30px;
+        color: #1e40af;
+      }
+
+      #login-form,
+      #forgot-password-form,
+      #otp-form,
+      #reset-password-form {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+
+      .input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: #f1f3f5;
+        border-radius: 10px;
+        padding: 12px;
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .input-group:hover,
+      .input-group:focus-within {
+        background: #ffffff;
+        box-shadow: 0 0 12px rgba(37, 99, 235, 0.2);
+      }
+
+      .input-group i {
+        font-size: 1.2em;
+        color: #2563eb;
+        margin-right: 12px;
+      }
+
+      .input-group input {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #1e40af;
+        font-size: 1em;
+        width: 100%;
+        padding: 5px;
+      }
+
+      .input-group input::placeholder {
+        color: #64748b;
+      }
+
+      .toggle-password {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        margin-left: 10px;
+        transition: opacity 0.3s ease;
+      }
+
+      .toggle-password:hover {
+        opacity: 0.8;
+      }
+
+      .status-icon {
+        font-size: 1em;
+        color: #27ae60;
+        margin-left: 10px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .error-message {
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        width: 100%;
+        font-size: 0.8em;
+        color: #e74c3c;
+        text-align: left;
+      }
+
+      .login-btn {
+        padding: 15px;
+        background: #2563eb;
+        border: none;
+        border-radius: 10px;
+        color: #ffffff;
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.3s ease;
+      }
+
+      .login-btn:hover {
+        background: #1e40af;
+        transform: scale(1.05);
+      }
+
+      .login-container p {
+        margin-top: 20px;
+        font-size: 0.9em;
+      }
+
+      .signup-link,
+      .forgot-password {
+        color: #2563eb;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      .signup-link:hover,
+      .forgot-password:hover {
+        color: #1e40af;
+        text-decoration: underline;
+      }
+
+      .otp-inputs {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .otp-block {
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        font-size: 1.2em;
+        background: #f1f3f5;
+        border: 1px solid #d1d5db;
+        border-radius: 5px;
+        color: #1e40af;
+        transition: box-shadow 0.3s ease;
+      }
+
+      .otp-block:focus {
+        outline: none;
+        box-shadow: 0 0 8px rgba(37, 99, 235, 0.5);
+      }
+
+      .otp-block.valid {
+        box-shadow: 0 0 8px #27ae60;
+        border-color: #27ae60;
+      }
+
+      .otp-block.invalid {
+        box-shadow: 0 0 8px #e74c3c;
+        border-color: #e74c3c;
+      }
+
+      .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #ffffff;
+        padding: 20px 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        display: none;
+        flex-direction: column;
+        gap: 15px;
+        z-index: 1000;
+        min-width: 300px;
+        border: 1px solid #d1d5db;
+        animation: popupFadeIn 0.3s ease-in-out;
+      }
+
+      @keyframes popupFadeIn {
+        from {
+          opacity: 0;
+          transform: translate(-50%, -60%);
+        }
+        to {
+          opacity: 1;
+          transform: translate(-50%, -50%);
+        }
+      }
+
+      .popup-text {
+        font-size: 1.1em;
+        color: #1e40af;
+        text-align: center;
+      }
+
+      .close-popup {
+        background: #2563eb;
+        color: #ffffff;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .close-popup:hover {
+        background: #1e40af;
+      }
+
+      .footer {
+        background: #f8fafc;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .footer p {
+        font-size: 0.9rem;
+        color: #64748b;
+      }
+
+      .footer-links {
+        margin-top: 10px;
+      }
+
+      .footer-links a {
+        color: #2563eb;
+        margin: 0 15px;
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links a:hover {
+        color: #1e40af;
+      }
+
+      @media (max-width: 768px) {
+        .login-container {
+          padding: 30px;
+          max-width: 90%;
+        }
+        .otp-block {
+          width: 35px;
+          height: 35px;
+          font-size: 1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="login-section">
+      <div class="login-container" id="login-container">
+        <h1>Log In</h1>
+        <form id="login-form">
+          <div class="input-group">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="login-email" placeholder="Email" required />
+            <span id="login-email-status" class="status-icon hidden">✔</span>
+            <span id="login-email-error" class="error-message"></span>
+          </div>
+          <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
+            <input
+              type="password"
+              id="login-password"
+              placeholder="Password"
+              required
+            />
+            <img
+              id="toggle-login-password"
+              src="/images/show-password.png"
+              alt="Show Password"
+              class="toggle-password"
+            />
+            <span id="login-password-error" class="error-message"></span>
+          </div>
+          <button type="submit" class="login-btn">Log In</button>
+        </form>
+        <p>
+          <a href="#" id="forgot-password-link" class="forgot-password"
+            >Forgot Password?</a
+          >
+        </p>
+        <p>
+          Don't have an account?
+          <a href="/signup" class="signup-link">Sign Up</a>
+        </p>
+      </div>
+
+      <div class="login-container hidden" id="forgot-password-container">
+        <h1>Forgot Password</h1>
+        <form id="forgot-password-form">
+          <div class="input-group">
+            <i class="fa-solid fa-envelope"></i>
+            <input
+              type="email"
+              id="forgot-email"
+              placeholder="Enter your email"
+              required
+            />
+            <span id="forgot-email-error" class="error-message"></span>
+          </div>
+          <button type="submit" class="login-btn">Send OTP</button>
+        </form>
+        <p>
+          <a href="#" id="back-to-login" class="signup-link">Back to Login</a>
+        </p>
+      </div>
+
+      <div class="login-container hidden" id="otp-container">
+        <h1>Verify OTP</h1>
+        <form id="otp-form">
+          <div class="otp-inputs">
+            <input type="text" maxlength="1" class="otp-block" required />
+            <input type="text" maxlength="1" class="otp-block" required />
+            <input type="text" maxlength="1" class="otp-block" required />
+            <input type="text" maxlength="1" class="otp-block" required />
+            <input type="text" maxlength="1" class="otp-block" required />
+            <input type="text" maxlength="1" class="otp-block" required />
+          </div>
+          <span id="otp-error" class="error-message"></span>
+          <button type="submit" class="login-btn">Verify OTP</button>
+        </form>
+        <p>
+          <a href="#" id="back-to-forgot" class="signup-link">Resend OTP</a>
+        </p>
+      </div>
+
+      <div class="login-container hidden" id="reset-password-container">
+        <h1>Reset Password</h1>
+        <form id="reset-password-form">
+          <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
+            <input
+              type="password"
+              id="new-password"
+              placeholder="New Password"
+              required
+            />
+            <img
+              id="toggle-new-password"
+              src="show-password.png"
+              alt="Show Password"
+              class="toggle-password"
+            />
+            <span id="new-password-error" class="error-message"></span>
+          </div>
+          <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
+            <input
+              type="password"
+              id="confirm-password"
+              placeholder="Confirm Password"
+              required
+            />
+            <img
+              id="toggle-confirm-password"
+              src="/images/show-password.png"
+              alt="Show Password"
+              class="toggle-password"
+            />
+            <span id="confirm-password-error" class="error-message"></span>
+          </div>
+          <button type="submit" class="login-btn">Reset Password</button>
+        </form>
+      </div>
+    </section>
+
+    <div class="popup" id="popup">
+      <span class="popup-text" id="popup-text"></span>
+      <button class="close-popup" id="close-popup">Close</button>
+    </div>
+
+    <footer class="footer">
+      <p>© 2025 Pandemic Response. All Rights Reserved.</p>
+      <div class="footer-links">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+        <a href="/contact">Contact Us</a>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Check if user is already logged in
+        if (localStorage.getItem("token")) {
+          window.location.href = "/firstPage";
+        }
+
+        // Popup elements
+        const popup = document.getElementById("popup");
+        const popupText = document.getElementById("popup-text");
+        const closePopupButton = document.getElementById("close-popup");
+
+        closePopupButton.addEventListener("click", () => {
+          popup.style.display = "none";
+        });
+
+        function showPopupMessage(message) {
+          popupText.textContent = message;
+          popup.style.display = "flex";
+          setTimeout(() => (popup.style.display = "none"), 3000);
+        }
+
+        // Containers
+        const loginContainer = document.getElementById("login-container");
+        const forgotPasswordContainer = document.getElementById(
+          "forgot-password-container"
+        );
+        const otpContainer = document.getElementById("otp-container");
+        const resetPasswordContainer = document.getElementById(
+          "reset-password-container"
+        );
+
+        // Forgot Password Link
+        const forgotPasswordLink = document.getElementById(
+          "forgot-password-link"
+        );
+        const backToLogin = document.getElementById("back-to-login");
+        const backToForgot = document.getElementById("back-to-forgot");
+
+        forgotPasswordLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          loginContainer.classList.add("hidden");
+          forgotPasswordContainer.classList.remove("hidden");
+        });
+
+        backToLogin.addEventListener("click", (e) => {
+          e.preventDefault();
+          forgotPasswordContainer.classList.add("hidden");
+          loginContainer.classList.remove("hidden");
+        });
+
+        backToForgot.addEventListener("click", (e) => {
+          e.preventDefault();
+          otpContainer.classList.add("hidden");
+          forgotPasswordContainer.classList.remove("hidden");
+        });
+
+        // Password Toggle for Login
+        const toggleLoginPassword = document.getElementById(
+          "toggle-login-password"
+        );
+        const loginPasswordInput = document.getElementById("login-password");
+        const showPasswordIcon = "/images/show-password.png";
+        const hidePasswordIcon = "/images/hide-password.png";
+
+        function togglePasswordVisibility(input, toggleIcon) {
+          if (input.type === "password") {
+            input.type = "text";
+            toggleIcon.src = hidePasswordIcon;
+            toggleIcon.alt = "Hide Password";
+          } else {
+            input.type = "password";
+            toggleIcon.src = showPasswordIcon;
+            toggleIcon.alt = "Show Password";
+          }
+        }
+
+        toggleLoginPassword.addEventListener("click", () => {
+          togglePasswordVisibility(loginPasswordInput, toggleLoginPassword);
+        });
+
+        // Password Toggle for Reset
+        const toggleNewPassword = document.getElementById(
+          "toggle-new-password"
+        );
+        const newPasswordInput = document.getElementById("new-password");
+        const toggleConfirmPassword = document.getElementById(
+          "toggle-confirm-password"
+        );
+        const confirmPasswordInput =
+          document.getElementById("confirm-password");
+
+        toggleNewPassword.addEventListener("click", () => {
+          togglePasswordVisibility(newPasswordInput, toggleNewPassword);
+        });
+
+        toggleConfirmPassword.addEventListener("click", () => {
+          togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword);
+        });
+
+        // Email Validation
+        const loginEmailStatus = document.getElementById("login-email-status");
+        const loginEmail = document.getElementById("login-email");
+
+        function isValidEmail(email) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(email);
+        }
+
+        function updateEmailStatus(input, statusIcon, errorElement, isValid) {
+          if (isValid) {
+            errorElement.textContent = "";
+            statusIcon.style.display = "inline";
+          } else {
+            errorElement.textContent = "Invalid email address";
+            statusIcon.style.display = "none";
+          }
+        }
+
+        loginEmail.addEventListener("input", () => {
+          const isValid = isValidEmail(loginEmail.value);
+          updateEmailStatus(
+            loginEmail,
+            loginEmailStatus,
+            document.getElementById("login-email-error"),
+            isValid
+          );
+        });
+
+        const allowedEmails = [
+          "sunilnp@acem.edu.in",
+          "ofcsatyam007@gmail.com",
+          "vanshajs11@gmail.com",
+        ];
+
+        // Login Form Submission
+        const loginForm = document.getElementById("login-form");
+        if (loginForm) {
+          loginForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const email = loginEmail.value;
+            const password = loginPasswordInput.value;
+            const emailError = document.getElementById("login-email-error");
+            const passwordError = document.getElementById(
+              "login-password-error"
+            );
+
+            let hasError = false;
+            if (!email) {
+              emailError.textContent = "Email is required";
+              hasError = true;
+            } else if (!isValidEmail(email)) {
+              emailError.textContent = "Invalid email address";
+              hasError = true;
+            } else {
+              emailError.textContent = "";
+            }
+
+            if (!password) {
+              passwordError.textContent = "Password is required";
+              hasError = true;
+            } else {
+              passwordError.textContent = "";
+            }
+
+            if (hasError) {
+              showPopupMessage("Please fix the errors before logging in.");
+              return;
+            }
+
+            // Send login request with user-provided credentials
+            fetch("/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password }),
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error(
+                    "Login failed: Invalid credentials or server error"
+                  );
+                }
+                return response.json();
+              })
+              .then((data) => {
+                if (data.token) {
+                  localStorage.setItem("token", data.token);
+                  localStorage.setItem("email", email);
+                  localStorage.setItem("isLoggedIn", "true");
+                  // Redirect based on email role
+                  if (allowedEmails.includes(email)) {
+                    window.location.href = "/admin";
+                  } else {
+                    window.location.href = "/firstPage";
+                  }
+                } else {
+                  showPopupMessage(data.error || "Login failed");
+                }
+              })
+              .catch((error) => {
+                console.error("Login error:", error);
+                showPopupMessage("Login failed: " + error.message);
+              });
+          });
+        }
+
+        // Forgot Password Submission
+        const forgotPasswordForm = document.getElementById(
+          "forgot-password-form"
+        );
+        let forgotEmailValue = "";
+        if (forgotPasswordForm) {
+          forgotPasswordForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const email = document.getElementById("forgot-email").value;
+            const emailError = document.getElementById("forgot-email-error");
+
+            if (!email || !isValidEmail(email)) {
+              emailError.textContent = "Please enter a valid email";
+            } else {
+              emailError.textContent = "";
+              forgotEmailValue = email;
+              fetch("/forgot-password", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.message) {
+                    showPopupMessage("OTP sent to your email!");
+                    forgotPasswordContainer.classList.add("hidden");
+                    otpContainer.classList.remove("hidden");
+                  } else {
+                    showPopupMessage("Error sending OTP");
+                  }
+                })
+                .catch((err) => showPopupMessage("Error: " + err.message));
+            }
+          });
+        }
+
+        // OTP Verification
+        const otpForm = document.getElementById("otp-form");
+        const otpBlocks = document.querySelectorAll(".otp-block");
+
+        otpBlocks.forEach((block, index) => {
+          block.addEventListener("input", (e) => {
+            if (e.target.value.length === 1 && index < otpBlocks.length - 1) {
+              otpBlocks[index + 1].focus();
+            }
+          });
+          block.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && !e.target.value && index > 0) {
+              otpBlocks[index - 1].focus();
+            }
+          });
+        });
+
+        if (otpForm) {
+          otpForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const otp = Array.from(otpBlocks)
+              .map((block) => block.value)
+              .join("");
+            const otpError = document.getElementById("otp-error");
+
+            if (otp.length !== 6 || !/^\d{6}$/.test(otp)) {
+              otpError.textContent = "Please enter a valid 6-digit OTP";
+              otpBlocks.forEach((block) => block.classList.add("invalid"));
+              return;
+            }
+
+            fetch("/reset-password/verify-otp", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email: forgotEmailValue, otp }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.valid) {
+                  otpBlocks.forEach((block) => block.classList.add("valid"));
+                  showPopupMessage("OTP verified! Set your new password.");
+                  setTimeout(() => {
+                    otpContainer.classList.add("hidden");
+                    resetPasswordContainer.classList.remove("hidden");
+                  }, 1000);
+                } else {
+                  otpBlocks.forEach((block) => block.classList.add("invalid"));
+                  otpError.textContent = "Invalid OTP";
+                  showPopupMessage("Invalid OTP");
+                }
+              })
+              .catch((err) => showPopupMessage("Error: " + err.message));
+          });
+        }
+
+        // Reset Password Submission
+        const resetPasswordForm = document.getElementById(
+          "reset-password-form"
+        );
+        if (resetPasswordForm) {
+          resetPasswordForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const newPassword = document.getElementById("new-password").value;
+            const confirmPassword =
+              document.getElementById("confirm-password").value;
+            const newPasswordError =
+              document.getElementById("new-password-error");
+            const confirmPasswordError = document.getElementById(
+              "confirm-password-error"
+            );
+
+            let hasError = false;
+            if (!newPassword) {
+              newPasswordError.textContent = "New password is required";
+              hasError = true;
+            } else {
+              newPasswordError.textContent = "";
+            }
+
+            if (!confirmPassword) {
+              confirmPasswordError.textContent = "Confirm password is required";
+              hasError = true;
+            } else if (newPassword !== confirmPassword) {
+              confirmPasswordError.textContent = "Passwords do not match";
+              hasError = true;
+            } else {
+              confirmPasswordError.textContent = "";
+            }
+
+            if (hasError) {
+              showPopupMessage("Please fix the errors before resetting.");
+              return;
+            }
+
+            fetch("/reset-password", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: forgotEmailValue,
+                password: newPassword,
+              }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.message) {
+                  showPopupMessage("Password reset successful! Please log in.");
+                  setTimeout(() => {
+                    resetPasswordContainer.classList.add("hidden");
+                    loginContainer.classList.remove("hidden");
+                  }, 1000);
+                } else {
+                  showPopupMessage("Error resetting password");
+                }
+              })
+              .catch((err) => showPopupMessage("Error: " + err.message));
+          });
+        }
+      });
+    </script>
+  </body>
 </html>
