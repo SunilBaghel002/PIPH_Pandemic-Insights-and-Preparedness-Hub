@@ -1,0 +1,181 @@
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  height: 100%;
+  background-image: linear-gradient(to top, #010c1a 0%, #05184b 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 100px 20px 20px 20px;
+  transition: left 0.3s ease-in-out;
+  border-right: 1px solid rgba(0, 255, 255, 0.2);
+  overflow-y: auto;
+}
+.sidebar-links::-webkit-scrollbar {
+  width: 0px;
+}
+
+.sidebar-links::-webkit-scrollbar-track {
+  background: #2563eb;
+}
+
+.sidebar-links::-webkit-scrollbar-thumb {
+  background: #2563eb; /* Adjusted to match previous blue */
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+.sidebar-links::-webkit-scrollbar-thumb:hover {
+  background: #1e40af; /* Adjusted to match previous hover */
+}
+.sidebar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+  max-height: 80vh;
+  overflow-y: scroll;
+  width: 100%;
+}
+
+.sidebar-link {
+  padding: 15px;
+  text-decoration: none;
+  font-size: 16px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-link i {
+  font-size: 18px;
+}
+
+.sidebar-link:hover {
+  background-color: rgba(196, 235, 235, 0.966);
+  color: #010d42;
+}
+
+.sidebar-link.active {
+  background-color: rgb(255 255 255 / 87%);
+  color: #000c63;
+  font-weight: bold;
+}
+
+.user-profile {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 255, 255, 0.5);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.user-photo:hover {
+  transform: scale(1.1);
+}
+
+.user-info {
+  flex-grow: 1;
+}
+
+#user-name {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #00ffff;
+}
+
+#user-email {
+  display: block;
+  font-size: 12px;
+  color: #bbb;
+}
+
+.profile-btn {
+  background: rgba(0, 255, 255, 0.3);
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.profile-btn:hover {
+  background: rgba(0, 255, 255, 0.5);
+  transform: scale(1.1);
+}
+
+.profile-btn i {
+  color: #fff;
+  font-size: 14px;
+}
+
+.logo {
+  position: fixed;
+  top: 5px;
+  left: 60px;
+  z-index: 1100;
+  cursor: pointer;
+}
+
+.logo-img {
+  width: 120px;
+  height: 100px;
+  border-radius: 50%;
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.logo-img:hover,
+.logo-img:active {
+  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
+  transform: scale(1.1);
+}
+
+.mobile-toggle {
+  display: none;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1100;
+  cursor: pointer;
+}
+
+.mobile-hamburger {
+  font-size: 2rem;
+  color: #052020;
+  transition: transform 0.3s ease;
+}
+
+.mobile-hamburger:hover {
+  transform: scale(1.1);
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .sidebar {
+    left: -250px;
+  }
+
+  .sidebar.active {
+    left: 0;
+  }
+
+  .mobile-toggle {
+    display: block;
+  }
+}

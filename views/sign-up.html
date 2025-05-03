@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pandemic Response - Sign Up</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/sign-up.css" />
+  </head>
+  <body>
+    <section class="signup-section">
+      <div class="signup-container" id="signup-container">
+        <h1>Sign Up</h1>
+        <form id="signup-form">
+          <div class="input-group">
+            <i class="fa-solid fa-user"></i>
+            <input
+              type="text"
+              id="signup-name"
+              placeholder="Full Name"
+              required
+            />
+            <span id="signup-name-error" class="error-message"></span>
+          </div>
+          <div class="input-group">
+            <i class="fa-solid fa-envelope"></i>
+            <input
+              type="email"
+              id="signup-email"
+              placeholder="Email"
+              required
+            />
+            <span id="signup-email-status" class="status-icon hidden">✔</span>
+            <span id="signup-email-error" class="error-message"></span>
+          </div>
+          <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
+            <input
+              type="password"
+              id="signup-password"
+              placeholder="Password"
+              required
+            />
+            <img
+              id="toggle-signup-password"
+              src="/images/show-password.png"
+              alt="Show Password"
+              class="toggle-password"
+            />
+            <span id="signup-password-error" class="error-message"></span>
+          </div>
+          <div class="input-group phone-group">
+            <i class="fa-solid fa-phone"></i>
+            <select id="country-code" required>
+              <option
+                value="+91"
+                id="country-code-option"
+                style="background-color: black"
+              >
+                +91 (IN)
+              </option>
+              <option
+                value="+1"
+                id="country-code-option"
+                style="background-color: black"
+              >
+                +1 (US)
+              </option>
+              <option
+                value="+44 "
+                id="country-code-option"
+                style="background-color: black"
+              >
+                +44 (UK)
+              </option>
+              <!-- Add more country codes as needed -->
+            </select>
+            <input
+              type="tel"
+              id="signup-phone"
+              placeholder="Phone Number"
+              required
+            />
+            <span id="signup-phone-error" class="error-message"></span>
+          </div>
+          <div class="input-group">
+            <i class="fa-solid fa-calendar-alt"></i>
+            <input type="date" id="signup-dob" required />
+            <span id="signup-dob-error" class="error-message"></span>
+          </div>
+          <button type="submit" class="signup-btn">Sign Up</button>
+        </form>
+        <p>
+          Already have an account?
+          <a href="/login" class="login-link">Log In</a>
+        </p>
+      </div>
+
+      <div class="signup-container hidden" id="otp-container">
+        <h1>Verify OTP</h1>
+        <form id="otp-form">
+          <div class="otp-inputs">
+            <input type="text" maxlength="1" class="otp-block" required />
+            <input type="text" maxlength="1" class="otp-block" required />
+            <input type="text" maxlength="1" class="otp-block" required />
+            <input type="text" maxlength="1" class="otp-block" required />
+            <input type="text" maxlength="1" class="otp-block" required />
+            <input type="text" maxlength="1" class="otp-block" required />
+          </div>
+          <span id="otp-error" class="error-message"></span>
+          <button type="submit" class="signup-btn">Verify OTP</button>
+        </form>
+        <p><a href="#" id="resend-otp" class="login-link">Resend OTP</a></p>
+      </div>
+    </section>
+
+    <div class="popup" id="popup">
+      <span class="popup-text" id="popup-text"></span>
+      <button class="close-popup" id="close-popup">Close</button>
+    </div>
+
+    <footer class="footer">
+      <p>© 2025 Pandemic Response. All Rights Reserved.</p>
+      <div class="footer-links">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+        <a href="/contact">Contact Us</a>
+      </div>
+    </footer>
+
+    <script src="/js/sign-up.js"></script>
+  </body>
+</html>
