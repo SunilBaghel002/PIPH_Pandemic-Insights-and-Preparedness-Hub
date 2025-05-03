@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crisis Aid Navigator - Request Resources</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/firstPage.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+    <link rel="stylesheet" href="/css/request.css" />
+  </head>
+
+  <body>
+    <!-- Sidebar -->
+    <div class="logo" onclick="window.location.href='/'">
+      <img src="/images/logo.png" alt="Pandemic Response Logo" class="logo-img" />
+    </div>
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-links" id="sidebar-links">
+        <a href="/" class="sidebar-link"
+          ><i class="fa-solid fa-home"></i> Home</a
+        >
+        <a href="/firstPage" class="sidebar-link"
+          ><i class="fa-solid fa-virus"></i> Dashboard</a
+        >
+        <a href="/pandamic" class="sidebar-link"
+          ><i class="fa-solid fa-virus"></i> Live Pandemic Stats</a
+        >
+        <a href="/request" class="sidebar-link"
+          ><i class="fa-solid fa-box-open"></i> Need Resources</a
+        >
+        <a href="/map" class="sidebar-link"
+          ><i class="fa-solid fa-hospital"></i> Find Hospitals</a
+        >
+        <a href="/stats" class="sidebar-link"
+          ><i class="fa-solid fa-chart-pie"></i> Graph Analytics</a
+        >
+        <a href="/organizations" class="sidebar-link"
+          ><i class="fa-solid fa-building"></i> Organizations</a
+        >
+        <a href="/org-dashboard" class="sidebar-link"
+          ><i class="fa-solid fa-tachometer-alt"></i> Org Dashboard</a
+        >
+        <a href="/user-dashboard" class="sidebar-link"
+          ><i class="fa-solid fa-user"></i> User Dashboard</a
+        >
+        <a href="/alerts" class="sidebar-link"
+        ><i class="fa-solid fa-alert"></i> Alerts</a
+      >
+        <a href="/profile" class="sidebar-link"
+          ><i class="fa-solid fa-id-card"></i> Profile</a
+        >
+      </div>
+      <div class="user-profile">
+        <img
+          src="/default-user.png"
+          alt="User Photo"
+          id="user-photo"
+          class="user-photo"
+          onclick="toggleSidebarMobile()"
+        />
+        <div class="user-info">
+          <span id="user-name">User Name</span>
+          <span id="user-email">user@example.com</span>
+        </div>
+        <button class="profile-btn" onclick="window.location.href='/profile'">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-toggle" onclick="toggleSidebarMobile()">
+      <i class="fa-solid fa-bars mobile-hamburger"></i>
+    </div>
+    <div class="floating-shapes">
+      <div class="shape shape1"></div>
+      <div class="shape shape2"></div>
+      <div class="shape shape3"></div>
+      <div class="shape shape4"></div>
+      <div class="shape shape5"></div>
+    </div>
+
+    <header>
+      <nav>
+        <div class="nav-logo">
+          <i class="fas fa-heartbeat"></i>
+          <span>PIPH</span>
+        </div>
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/request" class="active">Request Resources</a>
+          <a href="/about">About</a>
+          <a href="/help">Help</a>
+          <a href="/contact">Contact</a>
+        </div>
+        <div class="nav-cart">
+          <i class="fas fa-shopping-cart" id="cart-icon"></i>
+          <span class="cart-count" id="cart-count">0</span>
+        </div>
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+      <div class="header-content">
+        <h1>PIPH </h1>
+        <p>Essential resources at minimal cost during pandemic crisis</p>
+        <button class="cta-button" onclick="scrollToResources()">
+          Browse Resources
+        </button>
+      </div>
+    </header>
+
+    <div class="notification-banner" id="notification-banner">
+      <i class="fas fa-info-circle"></i>
+      <div>
+        <h3>Important Notice</h3>
+        <p>
+          Services available for families affected by the pandemic. Resources
+          provided at minimal cost (₹5-10) to ensure fair distribution.
+        </p>
+      </div>
+      <button id="close-notification"><i class="fas fa-times"></i></button>
+    </div>
+
+    <main class="container">
+      <section class="resource-category" id="resources">
+        <div class="section-header">
+          <h2>Available Resources</h2>
+          <div class="category-tabs">
+            <button class="tab-btn active" data-category="all">All</button>
+            <button class="tab-btn" data-category="food">Food</button>
+            <button class="tab-btn" data-category="medicine">Medicine</button>
+            <button class="tab-btn" data-category="essentials">
+              Essentials
+            </button>
+          </div>
+        </div>
+
+        <div class="resource-list" id="resource-items">
+          <!-- Items will be populated by JavaScript -->
+        </div>
+
+        <div class="pagination-container">
+          <div class="pagination" id="pagination">
+            <!-- Pagination will be created by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <div id="cart-panel" class="cart-panel">
+        <div class="cart-header">
+          <h2>Your Request Cart</h2>
+          <button id="close-cart"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items">
+          <p id="empty-cart-message">No items added to your request yet.</p>
+          <!-- Cart items will be populated by JavaScript -->
+        </div>
+        <div class="cart-footer">
+          <div class="cart-total">
+            <span>Total:</span>
+            <span>₹<span id="cart-total">0</span></span>
+          </div>
+          <button id="checkout-btn" class="checkout-btn" disabled>
+            Proceed to Checkout
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Form Section (Initially Hidden) -->
+    <div id="checkout-form" class="form-overlay">
+      <div class="form-container">
+        <div class="checkout-steps">
+          <div class="step active" data-step="delivery">
+            <span class="step-number">1</span>
+            <span class="step-text">Delivery Info</span>
+          </div>
+          <div class="step" data-step="review">
+            <span class="step-number">2</span>
+            <span class="step-text">Review Order</span>
+          </div>
+          <div class="step" data-step="payment">
+            <span class="step-number">3</span>
+            <span class="step-text">Payment</span>
+          </div>
+          <div class="step" data-step="confirmation">
+            <span class="step-number">4</span>
+            <span class="step-text">Confirmation</span>
+          </div>
+        </div>
+
+        <!-- Step 1: Delivery Information -->
+        <div class="checkout-step-content" id="delivery-step">
+          <h2>Delivery Information</h2>
+          <form id="delivery-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="name"
+                  >Full Name<span class="required">*</span></label
+                >
+                <input type="text" id="name" required />
+                <div class="error-message" id="name-error"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="phone"
+                  >Phone Number<span class="required">*</span></label
+                >
+                <input
+                  type="tel"
+                  id="phone"
+                  placeholder="10-digit number"
+                  required
+                />
+                <div class="error-message" id="phone-error"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email<span class="required">*</span></label>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="example@gmail.com"
+                  required
+                />
+                <div class="error-message" id="email-error"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="aadhar"
+                  >Aadhar Number<span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="aadhar"
+                  placeholder="12-digit number"
+                  required
+                />
+                <div class="error-message" id="aadhar-error"></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="ration-card"
+                >Ration Card (optional)</label
+              >
+              <div class="file-upload">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Click to upload or drag and drop your Ration Card</p>
+                <small>JPG, PNG or PDF. Max 2MB.</small>
+                <input
+                  type="file"
+                  id="ration-card"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  onchange="handleFileUpload(this)"
+                />
+              </div>
+              <div
+                id="file-preview-container"
+                style="display: none"
+                class="file-preview"
+              >
+                <!-- Preview will be added by JavaScript -->
+              </div>
+              <div class="error-message" id="ration-card-error"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="address"
+                >Complete Address<span class="required">*</span></label
+              >
+              <textarea id="address" required></textarea>
+              <div class="error-message" id="address-error"></div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="wardno"
+                  >Ward Number<span class="required">*</span></label
+                >
+                <input type="text" id="wardno" required />
+                <div class="error-message" id="wardno-error"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="pincode"
+                  >PIN Code<span class="required">*</span></label
+                >
+                <input type="text" id="pincode" required />
+                <div class="error-message" id="pincode-error"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="family-size"
+                  >Family Size<span class="required">*</span></label
+                >
+                <select id="family-size" required>
+                  <option value="">Select</option>
+                  <option value="1-2">1-2 members</option>
+                  <option value="3-4">3-4 members</option>
+                  <option value="5-6">5-6 members</option>
+                  <option value="7+">7+ members</option>
+                </select>
+                <div class="error-message" id="family-size-error"></div>
+              </div>
+            </div>
+
+            <div class="form-buttons">
+              <button
+                type="button"
+                class="cancel-btn"
+                onclick="closeCheckoutForm()"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="next-btn">Continue to Review</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Step 2: Review Order -->
+        <div class="checkout-step-content hidden" id="review-step">
+          <h2>Review Your Order</h2>
+          <div class="review-details">
+            <div class="review-section">
+              <h3>Delivery Information</h3>
+              <div class="review-info" id="review-delivery-info">
+                <!-- Will be populated by JavaScript -->
+              </div>
+              <button class="edit-btn" onclick="goToStep('delivery')">
+                Edit
+              </button>
+            </div>
+
+            <div class="review-section">
+              <h3>Order Items</h3>
+              <div class="review-items" id="review-items">
+                <!-- Will be populated by JavaScript -->
+              </div>
+              <div class="review-total">
+                <span>Total:</span>
+                <span>₹<span id="review-total">0</span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-buttons">
+            <button
+              type="button"
+              class="back-btn"
+              onclick="goToStep('delivery')"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              class="next-btn"
+              onclick="goToStep('payment')"
+            >
+              Continue to Payment
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Payment -->
+        <div class="checkout-step-content hidden" id="payment-step">
+          <h2>Payment Method</h2>
+          <div class="payment-amount">
+            <p>
+              Amount to Pay:
+              <span class="amount">₹<span id="payment-amount">0</span></span>
+            </p>
+          </div>
+
+          <form id="payment-form">
+            <div class="payment-options">
+              <div class="payment-option">
+                <input
+                  type="radio"
+                  id="upi"
+                  name="payment-method"
+                  value="upi"
+                  checked
+                />
+                <label for="upi">UPI</label>
+                <div class="payment-icons">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/1200px-UPI-Logo-vector.svg.png"
+                    alt="UPI"
+                  />
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/1200px-Google_Pay_Logo.svg.png"
+                    alt="Google Pay"
+                  />
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/1200px-Paytm_Logo_%28standalone%29.svg.png"
+                    alt="Paytm"
+                  />
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/PhonePe_Logo.png/1200px-PhonePe_Logo.png"
+                    alt="PhonePe"
+                  />
+                </div>
+              </div>
+
+              <div class="payment-option">
+                <input
+                  type="radio"
+                  id="cards"
+                  name="payment-method"
+                  value="cards"
+                />
+                <label for="cards">Credit/Debit Cards</label>
+                <div class="payment-icons">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/1200px-Visa_Inc._logo.svg.png"
+                    alt="Visa"
+                  />
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1200px-Mastercard-logo.svg.png"
+                    alt="Mastercard"
+                  />
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/1200px-American_Express_logo_%282018%29.svg.png"
+                    alt="American Express"
+                  />
+                </div>
+              </div>
+
+              <div class="payment-option">
+                <input
+                  type="radio"
+                  id="netbanking"
+                  name="payment-method"
+                  value="netbanking"
+                />
+                <label for="netbanking">Net Banking</label>
+                <div class="payment-icons bank-icons">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/SBI-logo.svg/1200px-SBI-logo.svg.png"
+                    alt="SBI"
+                  />
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/HDFC_Bank_Logo.svg/1200px-HDFC_Bank_Logo.svg.png"
+                    alt="HDFC"
+                  />
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/ICICI_Bank_logo.svg/1200px-ICICI_Bank_logo.svg.png"
+                    alt="ICICI"
+                  />
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Axis_Bank_logo.svg/1200px-Axis_Bank_logo.svg.png"
+                    alt="Axis"
+                  />
+                </div>
+              </div>
+
+              <div class="payment-option">
+                <input
+                  type="radio"
+                  id="cod"
+                  name="payment-method"
+                  value="cod"
+                />
+                <label for="cod">Cash on Delivery</label>
+                <div class="payment-icons">
+                  <i class="fas fa-money-bill-wave"></i>
+                </div>
+              </div>
+            </div>
+
+            <div id="upi-form" class="payment-method-form">
+              <div class="form-group">
+                <label for="upi-id"
+                  >Enter UPI ID<span class="required">*</span></label
+                >
+                <input type="text" id="upi-id" placeholder="yourname@upi" />
+                <div class="error-message" id="upi-id-error"></div>
+              </div>
+            </div>
+
+            <div id="card-form" class="payment-method-form hidden">
+              <div class="form-group">
+                <label for="card-number"
+                  >Card Number<span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="card-number"
+                  placeholder="1234 5678 9012 3456"
+                />
+                <div class="error-message" id="card-number-error"></div>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="card-expiry"
+                    >Expiry Date<span class="required">*</span></label
+                  >
+                  <input type="text" id="card-expiry" placeholder="MM/YY" />
+                  <div class="error-message" id="card-expiry-error"></div>
+                </div>
+
+                <div class="form-group">
+                  <label for="card-cvv"
+                    >CVV<span class="required">*</span></label
+                  >
+                  <input type="text" id="card-cvv" placeholder="123" />
+                  <div class="error-message" id="card-cvv-error"></div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="card-name"
+                  >Name on Card<span class="required">*</span></label
+                >
+                <input type="text" id="card-name" />
+                <div class="error-message" id="card-name-error"></div>
+              </div>
+            </div>
+
+            <div id="netbanking-form" class="payment-method-form hidden">
+              <div class="form-group">
+                <label for="bank-select"
+                  >Select Bank<span class="required">*</span></label
+                >
+                <select id="bank-select">
+                  <option value="">Choose your bank</option>
+                  <option value="sbi">State Bank of India</option>
+                  <option value="hdfc">HDFC Bank</option>
+                  <option value="icici">ICICI Bank</option>
+                  <option value="axis">Axis Bank</option>
+                  <option value="pnb">Punjab National Bank</option>
+                  <option value="other">Other Banks</option>
+                </select>
+                <div class="error-message" id="bank-select-error"></div>
+              </div>
+            </div>
+
+            <div id="cod-form" class="payment-method-form hidden">
+              <p class="note">
+                <i class="fas fa-info-circle"></i>
+                You will need to pay in cash at the time of delivery. Please
+                keep the exact amount ready.
+              </p>
+            </div>
+
+            <div class="form-buttons">
+              <button
+                type="button"
+                class="back-btn"
+                onclick="goToStep('review')"
+              >
+                Back
+              </button>
+              <button id="paymentButton" type="submit" class="submit-btn">
+                Pay Now
+              </button>
+              <div id="spinnerOverlay" style="display: none">Loading...</div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Step 4: Confirmation -->
+        <div class="checkout-step-content hidden" id="confirmation-step">
+          <div class="confirmation-content">
+            <div class="confirmation-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Request Submitted Successfully!</h2>
+            <p>
+              Your request has been received. Our team will contact you shortly
+              to confirm delivery.
+            </p>
+            <div class="confirmation-details">
+              <p>Request ID: <span id="request-id"></span></p>
+              <p>Date: <span id="request-date"></span></p>
+              <p>Amount Paid: ₹<span id="paid-amount"></span></p>
+              <p>Payment Method: <span id="payment-method-used"></span></p>
+            </div>
+            <div class="form-buttons">
+              <button
+                type="button"
+                class="home-btn"
+                onclick="closeCheckoutForm()"
+              >
+                Back to Home
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="spinner-overlay" id="spinner-overlay" style="display: none">
+      <div class="spinner"></div>
+    </div>
+
+    <div id="toast" class="toast">
+      <div class="toast-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="toast-content">
+        <p id="toast-message"></p>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Crisis Aid Navigator</h3>
+          <p>
+            Providing essential resources during crisis situations at minimal
+            cost to ensure fair distribution across communities.
+          </p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/request">Resources</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h3>Contact Information</h3>
+          <p><i class="fas fa-phone"></i> Helpline: 1800-XXX-XXXX</p>
+          <p><i class="fas fa-envelope"></i> Email: help@crisisaid.org</p>
+          <p>
+            <i class="fas fa-map-marker-alt"></i> Address: 123 Relief Center,
+            City - 100001
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Crisis Aid Navigator | All Rights Reserved</p>
+      </div>
+    </footer>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/request.js"></script>
+  </body>
+</html>
