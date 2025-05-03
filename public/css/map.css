@@ -1,0 +1,319 @@
+/* Map-Specific Styles */
+.map-section {
+  margin: 2rem 0;
+  position: relative;
+  background-color: #f8fafc;
+}
+
+#map {
+  height: 500px;
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid #d1d5db;
+}
+
+.controls-overlay {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.control-card {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.control-btn {
+  background: #2563eb;
+  color: #ffffff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.control-btn:hover {
+  background: #1e40af;
+  transform: scale(1.05);
+}
+
+#hospital-search,
+#hospital-filter {
+  width: 100%;
+  background: #f1f3f5;
+  color: #333;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+#hospital-filter {
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%231e40af" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  appearance: none;
+}
+
+#info {
+  text-align: center;
+  font-size: 1rem;
+  color: #64748b;
+  margin: 1rem 0;
+}
+
+.hospital-list h2 {
+  font-size: 2rem;
+  color: #1e40af;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+#hospital-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+#hospital-list li {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+#hospital-list li:hover {
+  transform: translateY(-5px);
+}
+
+#hospital-list li strong {
+  font-size: 1.2rem;
+  color: #2563eb;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+#hospital-list li p {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0.5rem 0;
+}
+
+#hospital-list li a {
+  color: #1e40af;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+#hospital-list li a:hover {
+  text-decoration: underline;
+}
+
+#hospital-list li button {
+  margin: 0.5rem 0.25rem;
+  padding: 8px 12px;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#hospital-list li button:hover {
+  background: #1e40af;
+}
+
+.draggable {
+  position: fixed;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  cursor: move;
+  z-index: 150;
+  color: #333;
+}
+
+#route-info,
+#favorites-panel {
+  width: 250px;
+  font-size: 0.9rem;
+}
+
+#route-info {
+  top: 20px;
+  right: 20px;
+}
+
+#favorites-panel {
+  bottom: 20px;
+  right: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+#favorites-panel h3 {
+  font-size: 1rem;
+  color: #1e40af;
+  margin-bottom: 10px;
+}
+
+#favorites-panel ul {
+  list-style: none;
+  padding: 0;
+}
+
+#favorites-panel li {
+  padding: 5px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+#favorites-panel li:last-child {
+  border-bottom: none;
+}
+
+.draggable button {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.draggable button:hover {
+  background: #1e40af;
+}
+
+.ringing-bell {
+  display: inline-block;
+  animation: ring 0.5s ease-in-out 3;
+}
+
+.loading {
+  margin-left: 5px;
+}
+
+.button-text {
+  display: inline;
+}
+
+@keyframes ring {
+  0% {
+    transform: rotate(0);
+  }
+  10% {
+    transform: rotate(-20deg);
+  }
+  20% {
+    transform: rotate(20deg);
+  }
+  30% {
+    transform: rotate(-20deg);
+  }
+  40% {
+    transform: rotate(20deg);
+  }
+  50% {
+    transform: rotate(0);
+  }
+}
+
+.leaflet-routing-container {
+  background: #ffffff !important;
+  color: #333 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+.leaflet-routing-container a,
+.leaflet-routing-container span {
+  color: #2563eb !important;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  display: none;
+  text-align: center;
+}
+
+.grey {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1500;
+  display: none;
+}
+
+.popup-text {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.close-popup {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.close-popup:hover {
+  background: #1e40af;
+}
+
+@media (max-width: 768px) {
+  .controls-overlay {
+    position: static;
+    margin: 1rem 0;
+  }
+  #hospital-list {
+    grid-template-columns: 1fr;
+  }
+  #route-info {
+    width: 200px;
+    font-size: 0.8rem;
+    top: 10px;
+    right: 10px;
+  }
+  #favorites-panel {
+    width: 200px;
+    bottom: 10px;
+    right: 10px;
+  }
+}
