@@ -5,18 +5,37 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const path = require("path");
+const crypto = require("crypto");
 const mongoose = require("mongoose");
 const multer = require("multer");
+const fs = require("fs");
+const WebSocket = require("ws");
+const cors = require("cors");
+const { createObjectCsvWriter } = require("csv-writer");
 
 const app = express();
 dotenv.config();
 const port = 5000;
+app.use(
+  cors({
+    origin: "https://pandemic-insights-and-prepareness-hub-piph-rmk7.vercel.app/", // Allow your frontend URL
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  })
+);
 
 const uploadsDir = path.join(__dirname, "public", "uploads");
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
   console.log("Uploads folder created:", uploadsDir);
 }
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:5000');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -28,12 +47,48 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+
+app.get('/api/reverse', async (req, res) => {
+  const { lat, lon } = req.query;
+  if (!lat || !lon) {
+    return res.status(400).json({ error: 'Missing lat or lon parameters' });
+  }
+
+  try {
+    const response = await axios.get(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`,
+      {
+        headers: {
+          'User-Agent': 'PandemicInsights', // Required by Nominatim
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching Nominatim data:', error.message);
+    res.status(error.response?.status || 500).json({ error: 'Failed to fetch address' });
+  }
+});
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID || "rzp_test_bZWOcTtgLAp6U8",
+  key_secret: process.env.RAZORPAY_KEY_SECRET || "GA6BjC4wSaj0hdDgxq0yAmv4",
+});
 // MongoDB Setup
 mongoose
   .connect(process.env.MONGO_URI || "mongodb://localhost/pandemic")
   .then(() => console.log("Database is ready..!"))
   .catch((err) => console.log("MongoDB connection error:", err));
 
+const HospitalSchema = new mongoose.Schema({
+    name: String,
+    latitude: Number,
+    longitude: Number,
+    status: { type: String, default: "Normal" },
+    alerts: [{ userEmail: String, message: String, timestamp: Date }],
+});
+const Hospital = mongoose.model("Hospital", HospitalSchema);
+  
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -121,6 +176,29 @@ const requestSchema = new mongoose.Schema({
 
 const Request = mongoose.model("Request", requestSchema);
 
+const organizationSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  location: { type: String },
+  description: { type: String },
+  logo: { type: String },
+  cover: { type: String },
+  category: { type: String, enum: ["NGO", "Hospital", "Org"], default: "Org" },
+  volunteerRequirements: { type: Number, default: 0 },
+  volunteers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  projects: [
+    {
+      name: String,
+      description: String,
+      date: Date,
+      fundsRaised: { type: Number, default: 0 },
+    },
+  ],
+  creator: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  stories: [{ type: String }], // Added for success stories
+});
+const Organization = mongoose.model("Organization", organizationSchema);
+
 const resourceSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   name: { type: String, required: true },
@@ -183,12 +261,33 @@ app.get("/map", (req, res) =>
 app.get("/request", (req, res) =>
   res.sendFile(path.join(__dirname, "/views/request.html"))
 );
+app.get("/admin", (req, res) =>
+  res.sendFile(path.join(__dirname, "/views/manageRequest.html"))
+);
+app.get("/pandamic", (req, res) =>
+  res.sendFile(path.join(__dirname, "/views/pandamic.html"))
+);
 
 const allowedEmails = [
   "sunilnp@acem.edu.in",
   "ofcsatyam007@gmail.com",
   "vanshajs11@gmail.com",
 ];
+
+app.get("/hospital-dashboard", (req, res) => {
+  const token = req.headers["authorization"]?.split(" ")[1];
+  if (!token) return res.redirect("/login");
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (allowedEmails.includes(decoded.email)) {
+      res.sendFile(path.join(__dirname, "/views/hospital-dashboard.html"));
+    } else {
+      res.status(403).send("Access denied.");
+    }
+  } catch (error) {
+    res.redirect("/login");
+  }
+});
 
 app.get("/admin", (req, res) => {
   const token = req.headers["authorization"]?.split(" ")[1];
@@ -205,6 +304,61 @@ app.get("/admin", (req, res) => {
   }
 });
 
+const wss = new WebSocket.Server({ server });
+
+let hospitalClients = [];
+let orgClients = []; // Added for organization notifications
+
+wss.on("connection", (ws) => {
+  console.log("New client connected");
+
+  ws.on("message", async (message) => {
+    const data = JSON.parse(message);
+
+    if (data.type === "alert") {
+      const { hospitalId, userEmail, alertMessage } = data;
+      const hospital = await Hospital.findById(hospitalId);
+      if (hospital) {
+        hospital.alerts.push({
+          userEmail,
+          message: alertMessage,
+          timestamp: new Date(),
+        });
+        hospital.status = "Alerted";
+        await hospital.save();
+
+        hospitalClients.forEach((client) => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(
+              JSON.stringify({
+                type: "alert",
+                hospitalId,
+                alert: {
+                  userEmail,
+                  message: alertMessage,
+                  timestamp: new Date(),
+                },
+              })
+            );
+          }
+        });
+      }
+    } else if (data.type === "hospital-connect") {
+      hospitalClients.push(ws);
+      ws.on("close", () => {
+        hospitalClients = hospitalClients.filter((client) => client !== ws);
+      });
+    }else if (data.type === "org-connect") { // Added for org dashboard
+      orgClients.push(ws);
+      ws.on("close", () => {
+        orgClients = orgClients.filter((client) => client !== ws);
+      });
+    }
+  });
+
+  ws.on("close", () => console.log("Client disconnected"));
+});
+
 function authMiddleware(req, res, next) {
   const token = req.headers["authorization"]?.split(" ")[1];
   console.log("Token received:", token); // Debug log
@@ -218,6 +372,14 @@ function authMiddleware(req, res, next) {
     console.error("Token verification failed:", err.message); // Debug log
     res.status(401).json({ error: "Invalid token" });
   }
+}
+
+function sendOrgNotification(orgId, message) {
+  orgClients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify({ type: "notification", orgId, message }));
+    }
+  });
 }
 
 async function seedInitialResources() {

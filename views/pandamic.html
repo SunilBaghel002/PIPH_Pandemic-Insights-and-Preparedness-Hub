@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pandemic Hub - Pandemic Response</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/firstPage.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <link rel="stylesheet" href="/css/pandemic.css" />
+  </head>
+  <body>
+    <!-- Particle Background -->
+    <!-- <div id="particles-js"></div> -->
+
+    <!-- Sidebar -->
+    <div class="logo" onclick="window.location.href='/'">
+      <img src="/images/logo.png" alt="Pandemic Response Logo" class="logo-img" />
+    </div>
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-links">
+        <a href="/" class="sidebar-link"
+          ><i class="fa-solid fa-home"></i> Home</a
+        >
+        <a href="/firstPage" class="sidebar-link"
+          ><i class="fa-solid fa-virus"></i> Dashboard</a
+        >
+        <a href="/pandamic" class="sidebar-link"
+          ><i class="fa-solid fa-virus"></i> Pandemic Hub</a
+        >
+        <a href="/request" class="sidebar-link"
+          ><i class="fa-solid fa-box-open"></i> Need Resources</a
+        >
+        <a href="/map" class="sidebar-link"
+          ><i class="fa-solid fa-hospital"></i> Find Hospitals</a
+        >
+        <a href="/stats" class="sidebar-link"
+          ><i class="fa-solid fa-chart-pie"></i> Graph Analytics</a
+        >
+        <a href="/organizations" class="sidebar-link"
+          ><i class="fa-solid fa-building"></i> Organizations</a
+        >
+        <a href="/org-dashboard" class="sidebar-link"
+          ><i class="fa-solid fa-tachometer-alt"></i> Org Dashboard</a
+        >
+        <a href="/user-dashboard" class="sidebar-link"
+          ><i class="fa-solid fa-user"></i> User Dashboard</a
+        >
+        <a href="/alerts" class="sidebar-link"
+        ><i class="fa-solid fa-alert"></i> Alerts</a
+      >
+        <a href="/profile" class="sidebar-link"
+          ><i class="fa-solid fa-id-card"></i> Profile</a
+        >
+      </div>
+      <div class="user-profile">
+        <img
+          src="/default-user.png"
+          alt="User Photo"
+          id="user-photo"
+          class="user-photo"
+          onclick="toggleSidebarMobile()"
+        />
+        <div class="user-info">
+          <span id="user-name">User Name</span>
+          <!-- <span id="user-email">user@example.com</span> -->
+        </div>
+        <button class="profile-btn" onclick="window.location.href='/profile'">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-toggle" onclick="toggleSidebarMobile()">
+      <i class="fa-solid fa-bars mobile-hamburger"></i>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- News Ticker -->
+      <div class="news-ticker">
+        <div class="ticker-content" id="ticker-content">
+          <!-- Populated via JavaScript -->
+        </div>
+      </div>
+
+      <!-- Pandemic Status Indicator -->
+      <div class="status-indicator" id="status-indicator">
+        <h2>
+          <i class="fa-solid fa-info-circle"></i> Current Pandemic Status:
+          <span id="status-text">Loading...</span>
+        </h2>
+      </div>
+
+      <!-- Enhanced News Section -->
+      <div class="section-card">
+        <h2><i class="fa-solid fa-newspaper"></i> Pandemic News</h2>
+        <div class="news-filters">
+          <button
+            class="news-filter-btn active"
+            data-filter="all"
+            onclick="filterNews('all')"
+          >
+            All
+          </button>
+          <button
+            class="news-filter-btn"
+            data-filter="outbreaks"
+            onclick="filterNews('outbreaks')"
+          >
+            Outbreaks
+          </button>
+          <button
+            class="news-filter-btn"
+            data-filter="vaccines"
+            onclick="filterNews('vaccines')"
+          >
+            Vaccines
+          </button>
+          <button
+            class="news-filter-btn"
+            data-filter="policies"
+            onclick="filterNews('policies')"
+          >
+            Policies
+          </button>
+        </div>
+        <div class="news-grid" id="news-grid">
+          <!-- Populated via JavaScript -->
+        </div>
+        <button class="submit-news-btn" onclick="toggleNewsModal()">
+          Submit Your News
+        </button>
+      </div>
+
+      <!-- Prevention Guide -->
+      <div class="section-card">
+        <h2><i class="fa-solid fa-shield-alt"></i> How to Protect Yourself</h2>
+        <div class="prevention-guide">
+          <div class="guide-item">
+            <i class="fa-solid fa-mask"></i>
+            <p>Wear a mask properly over your nose and mouth.</p>
+          </div>
+          <div class="guide-item">
+            <i class="fa-solid fa-hands-wash"></i>
+            <p>Wash hands with soap for at least 40 seconds.</p>
+          </div>
+          <div class="guide-item">
+            <i class="fa-solid fa-people-arrows"></i>
+            <p>Maintain a 6-foot distance from others.</p>
+          </div>
+          <div class="guide-item">
+            <i class="fa-solid fa-syringe"></i>
+            <p>Stay up-to-date with vaccinations.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Myth vs. Fact Game -->
+      <div class="section-card">
+        <h2><i class="fa-solid fa-question-circle"></i> Myth vs. Fact Game</h2>
+        <div class="myth-fact-game">
+          <div
+            class="game-card"
+            data-answer="myth"
+            onclick="revealAnswer(this)"
+          >
+            Masks don’t protect against viruses.
+          </div>
+          <div
+            class="game-card"
+            data-answer="fact"
+            onclick="revealAnswer(this)"
+          >
+            Handwashing reduces infection risk.
+          </div>
+          <div
+            class="game-card"
+            data-answer="myth"
+            onclick="revealAnswer(this)"
+          >
+            Vaccines cause pandemics.
+          </div>
+          <div
+            class="game-card"
+            data-answer="fact"
+            onclick="revealAnswer(this)"
+          >
+            Social distancing slows spread.
+          </div>
+        </div>
+      </div>
+
+      <!-- User Polls -->
+      <div class="section-card">
+        <h2><i class="fa-solid fa-poll"></i> Community Poll</h2>
+        <div class="poll">
+          <p>Have you followed mask mandates in your area?</p>
+          <div class="poll-option" onclick="votePoll(this, 'yes')">Yes</div>
+          <div class="poll-option" onclick="votePoll(this, 'no')">No</div>
+          <div class="poll-result" id="poll-result">Yes: 0% | No: 0%</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget" id="chat-widget">
+      <div class="chat-header">Pandemic Assistant</div>
+      <div class="chat-body" id="chat-body">
+        <p>Welcome! Ask me anything about pandemics.</p>
+      </div>
+      <div class="chat-input">
+        <input
+          type="text"
+          id="chat-input"
+          placeholder="Type your question..."
+        />
+        <button onclick="sendChatMessage()">Send</button>
+      </div>
+    </div>
+    <button class="chat-toggle" onclick="toggleChat()">
+      <i class="fa-solid fa-comment"></i>
+    </button>
+
+    <!-- Popup -->
+    <div class="grey"></div>
+    <div class="popup" id="popup">
+      <span class="popup-text" id="popup-text"></span>
+      <button class="close-popup" id="close-popup">Close</button>
+    </div>
+
+    <!-- Submit News Modal -->
+    <div class="modal" id="news-modal">
+      <div class="modal-content">
+        <h3>Submit Your News</h3>
+        <input type="text" id="news-title" placeholder="News Title" />
+        <textarea
+          id="news-description"
+          placeholder="Description"
+          rows="4"
+        ></textarea>
+        <button onclick="submitNews()">Submit</button>
+        <button onclick="toggleNewsModal()">Close</button>
+      </div>
+    </div>
+
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/firstPage.js"></script>
+    <script src="/js/pandamic.js"></script>
+  </body>
+</html>

@@ -1,0 +1,435 @@
+body {
+    position: relative;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 100%); /* Added light background */
+  }
+
+  #particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.3;
+  }
+
+  .main-content {
+    padding: 30px 40px;
+  }
+
+  .news-ticker {
+    background: #f1f3f5; /* Light grey background */
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db; /* Light grey border */
+    overflow: hidden;
+    white-space: nowrap;
+    margin-bottom: 20px;
+  }
+
+  .ticker-content {
+    display: inline-block;
+    animation: ticker 40s linear infinite;
+  }
+
+  .ticker-content:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes ticker {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  .news-ticker a {
+    color: #1e40af; /* Blue instead of cyan */
+    text-decoration: none;
+    margin-right: 20px;
+  }
+
+  .news-ticker a:hover {
+    text-decoration: underline;
+  }
+
+  .section-card {
+    background: #ffffff; /* White background */
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #d1d5db; /* Light grey border */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .section-card h2 {
+    font-size: 2rem;
+    color: #1e40af; /* Blue instead of cyan */
+    margin-bottom: 15px;
+  }
+
+  /* Enhanced News Section */
+  .news-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .news-filter-btn {
+    background: transparent;
+    color: #1e40af; /* Blue instead of cyan */
+    border: 1px solid rgba(37, 99, 235, 0.5); /* Adjusted blue */
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .news-filter-btn:hover,
+  .news-filter-btn.active {
+    background: rgba(37, 99, 235, 0.3); /* Adjusted blue */
+    border-color: #2563eb; /* Solid blue */
+  }
+
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .news-card {
+    background: #f8fafc; /* Light grey-blue background */
+    padding: 15px;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+  }
+
+  .news-card:hover {
+    transform: scale(1.05);
+  }
+
+  .news-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  .news-card h3 {
+    font-size: 1.2rem;
+    color: #1e40af; /* Blue instead of cyan */
+    margin-bottom: 5px;
+  }
+
+  .news-card p {
+    color: #64748b; /* Medium grey text */
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+
+  .news-card .source-date {
+    font-size: 0.8rem;
+    color: #999; /* Lighter grey text */
+  }
+
+  .news-card .actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .news-card .read-more {
+    background: #2563eb; /* Blue background */
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+
+  .news-card .read-more:hover {
+    background: #1e40af; /* Darker blue on hover */
+  }
+
+  .news-card .bookmark {
+    background: none;
+    border: none;
+    color: #64748b; /* Medium grey */
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .news-card .bookmark.saved {
+    color: #e74c3c; /* Kept red for distinction */
+  }
+
+  .submit-news-btn {
+    background: #2563eb; /* Blue background */
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s ease;
+  }
+
+  .submit-news-btn:hover {
+    background: #1e40af; /* Darker blue on hover */
+  }
+
+  /* Other Sections */
+  .prevention-guide {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .guide-item {
+    flex: 1 1 300px;
+    background: #f8fafc; /* Light grey-blue background */
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+
+  .guide-item:hover {
+    transform: scale(1.05);
+  }
+
+  .guide-item i {
+    font-size: 2rem;
+    color: #1e40af; /* Blue instead of cyan */
+    margin-bottom: 10px;
+  }
+
+  .guide-item p {
+    color: #64748b; /* Medium grey text */
+  }
+
+  .myth-fact-game {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .game-card {
+    flex: 1 1 250px;
+    background: #f8fafc; /* Light grey-blue background */
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+
+  .game-card:hover {
+    transform: scale(1.05);
+  }
+
+  .game-card.revealed {
+    background: rgba(37, 99, 235, 0.2); /* Adjusted blue */
+  }
+
+  .game-card p {
+    color: #64748b; /* Medium grey text */
+  }
+
+  .chat-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background: #ffffff; /* White background */
+    border-radius: 15px;
+    border: 1px solid #d1d5db; /* Light grey border */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+    display: none;
+  }
+
+  .chat-header {
+    background: #2563eb; /* Blue background */
+    padding: 10px;
+    border-radius: 15px 15px 0 0;
+    text-align: center;
+    color: #ffffff;
+  }
+
+  .chat-body {
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    color: #333; /* Dark grey text */
+  }
+
+  .chat-input {
+    display: flex;
+    padding: 10px;
+  }
+
+  .chat-input input {
+    flex: 1;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    margin-right: 5px;
+    background: #f1f3f5; /* Light grey background */
+    color: #333; /* Dark grey text */
+  }
+
+  .chat-input button {
+    background: #2563eb; /* Blue background */
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .chat-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #2563eb; /* Blue background */
+    color: #ffffff;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .chat-toggle:hover {
+    transform: scale(1.1);
+  }
+
+  .poll {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .poll-option {
+    background: #f8fafc; /* Light grey-blue background */
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .poll-option:hover {
+    background: rgba(37, 99, 235, 0.1); /* Adjusted blue */
+  }
+
+  .poll-option.voted {
+    background: rgba(37, 99, 235, 0.3); /* Adjusted blue */
+  }
+
+  .poll-result {
+    display: none;
+    margin-top: 10px;
+  }
+
+  .status-indicator {
+    background: #f1f3f5; /* Light grey background */
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .status-indicator.green {
+    background: rgba(46, 204, 113, 0.3); /* Kept green for distinction */
+  }
+
+  .status-indicator.red {
+    background: rgba(231, 76, 60, 0.3); /* Kept red for distinction */
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Kept semi-transparent overlay */
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: #ffffff; /* White background */
+    width: 90%;
+    max-width: 500px;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #d1d5db; /* Light grey border */
+    color: #333; /* Dark grey text */
+  }
+
+  .modal-content h3 {
+    color: #2563eb; /* Blue instead of cyan */
+    margin-bottom: 15px;
+  }
+
+  .modal-content input,
+  .modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #d1d5db; /* Light grey border */
+    background: #f1f3f5; /* Light grey background */
+    color: #333; /* Dark grey text */
+  }
+
+  .modal-content button {
+    background: #2563eb; /* Blue background */
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .modal-content button:hover {
+    background: #1e40af; /* Darker blue on hover */
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .main-content {
+      padding: 20px;
+    }
+
+    .prevention-guide,
+    .myth-fact-game,
+    .news-grid {
+      flex-direction: column;
+      grid-template-columns: 1fr;
+    }
+
+    .chat-widget {
+      width: 90%;
+      right: 5%;
+    }
+  }

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Resource Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/firstPage.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <link rel="stylesheet" href="/css/manageRequest.css" />
+  </head>
+  <body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+
+    <!-- Sidebar (unchanged) -->
+    <div class="logo" onclick="window.location.href='/'">
+      <img
+        src="/images/logo.png"
+        alt="Pandemic Response Logo"
+        class="logo-img"
+      />
+    </div>
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-links">
+        <a href="/" class="sidebar-link"
+          ><i class="fa-solid fa-home"></i> Home</a
+        >
+        <a href="/firstPage" class="sidebar-link"
+          ><i class="fa-solid fa-virus"></i> Dashboard</a
+        >
+        <a href="/pandamic" class="sidebar-link"
+          ><i class="fa-solid fa-virus"></i> Pandemic Hub</a
+        >
+        <a href="/request" class="sidebar-link"
+          ><i class="fa-solid fa-box-open"></i> Need Resources</a
+        >
+        <a href="/map" class="sidebar-link"
+          ><i class="fa-solid fa-hospital"></i> Find Hospitals</a
+        >
+        <a href="/stats" class="sidebar-link"
+          ><i class="fa-solid fa-chart-pie"></i> Graph Analytics</a
+        >
+        <a href="/organizations" class="sidebar-link"
+          ><i class="fa-solid fa-building"></i> Organizations</a
+        >
+        <a href="/org-dashboard" class="sidebar-link"
+          ><i class="fa-solid fa-tachometer-alt"></i> Org Dashboard</a
+        >
+        <a href="/user-dashboard" class="sidebar-link"
+          ><i class="fa-solid fa-user"></i> User Dashboard</a
+        >
+        <a href="/alerts" class="sidebar-link"
+        ><i class="fa-solid fa-alert"></i> Alerts</a
+      >
+        <a href="/profile" class="sidebar-link"
+          ><i class="fa-solid fa-id-card"></i> Profile</a
+        >
+        <a href="/admin" class="sidebar-link active"
+          ><i class="fa-solid fa-cogs"></i> Admin Dashboard</a
+        >
+        <a href="/hospital-dashboard" class="sidebar-link active"
+          ><i class="fa-solid fa-heartbeat"></i> Hospital Dashboard</a
+        >
+      </div>
+      <div class="user-profile">
+        <img
+          src="/default-user.png"
+          alt="User Photo"
+          id="user-photo"
+          class="user-photo"
+          onclick="toggleSidebarMobile()"
+        />
+        <div class="user-info">
+          <span id="user-name">Admin</span>
+        </div>
+        <button class="profile-btn" onclick="window.location.href='/profile'">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-toggle" onclick="toggleSidebarMobile()">
+      <i class="fa-solid fa-bars mobile-hamburger"></i>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div id="error-message" class="error-message"></div>
+
+      <!-- Dashboard Stats -->
+      <div class="dashboard-stats" id="dashboard-stats">
+        <div class="stat-card">
+          <div class="stat-icon requests">
+            <i class="fa-solid fa-list-check"></i>
+          </div>
+          <div class="stat-value" id="stats-total-requests">0</div>
+          <div class="stat-label">Total Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon pending">
+            <i class="fa-solid fa-clock"></i>
+          </div>
+          <div class="stat-value" id="stats-pending-requests">0</div>
+          <div class="stat-label">Pending Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon approved">
+            <i class="fa-solid fa-check-circle"></i>
+          </div>
+          <div class="stat-value" id="stats-approved-requests">0</div>
+          <div class="stat-label">Approved Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon resources">
+            <i class="fa-solid fa-boxes-stacked"></i>
+          </div>
+          <div class="stat-value" id="stats-total-resources">0</div>
+          <div class="stat-label">Resource Types</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-header">
+          <h2><i class="fa-solid fa-boxes"></i> Manage Resources</h2>
+          <button class="action-btn" onclick="openAddResourceModal()">
+            <i class="fa-solid fa-plus"></i> Add Resource
+          </button>
+        </div>
+        <div class="resources-grid" id="resources-grid">
+          <div class="loadingSpinner"></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2><i class="fa-solid fa-list"></i> Manage Requests</h2>
+        <div class="filter">
+          <div class="filter-group">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+              type="text"
+              id="search"
+              placeholder="Search by name or email..."
+              onkeyup="filterRequests()"
+            />
+          </div>
+          <div class="filter-group">
+            <i class="fa-solid fa-filter"></i>
+            <select id="status-filter" onchange="filterRequests()">
+              <option value="all">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+              <option value="delivered">Delivered</option>
+            </select>
+          </div>
+          <button class="action-btn" onclick="openAddRequestModal()">
+            <i class="fa-solid fa-plus"></i> Add Request
+          </button>
+        </div>
+        <div class="table-container">
+          <div class="requests-table" id="requests-table">
+            <div class="table-header">
+              <div>Request ID</div>
+              <div>Name</div>
+              <div>Email</div>
+              <div>Type</div>
+              <div>Total</div>
+              <div>Status</div>
+              <div>Actions</div>
+            </div>
+            <div id="requests-loading" class="loadingSpinner"></div>
+            <div id="no-requests" class="no-items" style="display: none">
+              <i class="fa-solid fa-inbox"></i>
+              <p>No requests found</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-header">
+          <h2>
+            <i class="fa-solid fa-hand-holding-heart"></i> Manage Donations
+          </h2>
+          <button class="action-btn" onclick="refreshDonations()">
+            <i class="fa-solid fa-refresh"></i> Refresh
+          </button>
+        </div>
+        <div class="donations-list" id="donations-list">
+          <div class="loadingSpinner"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Resource Update Modal -->
+    <div class="modal" id="resource-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Update Resource</h3>
+          <span class="close" onclick="closeModal('resource-modal')">×</span>
+        </div>
+        <form id="update-resource-form">
+          <input type="hidden" id="resource-id" />
+          <div class="form-group">
+            <label for="resource-name">Resource Name</label>
+            <input type="text" id="resource-name" readonly />
+          </div>
+          <div class="form-group">
+            <label for="resource-category">Category</label>
+            <input type="text" id="resource-category" readonly />
+          </div>
+          <div class="form-group">
+            <label for="resource-price">Price (₹)</label>
+            <input type="number" id="resource-price" step="1" min="0" />
+          </div>
+          <div class="form-group">
+            <label for="resource-stock">Current Stock</label>
+            <input type="number" id="resource-stock" min="0" />
+          </div>
+          <div class="form-group">
+            <label for="resource-description">Description</label>
+            <textarea id="resource-description" rows="3"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeModal('resource-modal')"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Update Resource
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add Resource Modal -->
+    <div class="modal" id="add-resource-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Add New Resource</h3>
+          <span class="close" onclick="closeModal('add-resource-modal')"
+            >×</span
+          >
+        </div>
+        <form id="add-resource-form">
+          <div class="form-group">
+            <label for="new-resource-id">Resource ID</label>
+            <input
+              type="text"
+              id="new-resource-id"
+              placeholder="Unique ID for the resource"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="new-resource-name">Resource Name</label>
+            <input
+              type="text"
+              id="new-resource-name"
+              placeholder="Resource Name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="new-resource-category">Category</label>
+            <select id="new-resource-category" required>
+              <option value="">Select Category</option>
+              <option value="food">Food</option>
+              <option value="medicine">Medicine</option>
+              <option value="essentials">Essentials</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="new-resource-price">Price (₹)</label>
+              <input
+                type="number"
+                id="new-resource-price"
+                placeholder="Price"
+                min="0"
+                step="1"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="new-resource-stock">Initial Stock</label>
+              <input
+                type="number"
+                id="new-resource-stock"
+                placeholder="Stock Quantity"
+                min="0"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="new-resource-description">Description</label>
+            <textarea
+              id="new-resource-description"
+              placeholder="Resource Description"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeModal('add-resource-modal')"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">Add Resource</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Request Detail Modal -->
+    <div class="modal" id="request-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Request Details</h3>
+          <span class="close" onclick="closeModal('request-modal')">×</span>
+        </div>
+        <div id="request-details-content">
+          <div class="loadingSpinner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Request Modal -->
+    <div class="modal" id="add-request-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Add New Request</h3>
+          <span class="close" onclick="closeModal('add-request-modal')">×</span>
+        </div>
+        <form id="add-request-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="add-name">Full Name</label>
+              <input
+                type="text"
+                id="add-name"
+                placeholder="Full Name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="add-phone">Phone Number</label>
+              <input
+                type="text"
+                id="add-phone"
+                placeholder="10-digit Phone Number"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="add-email">Email</label>
+              <input type="email" id="add-email" placeholder="Email Address" />
+            </div>
+            <div class="form-group">
+              <label for="add-aadhar">Aadhar (Optional)</label>
+              <input
+                type="text"
+                id="add-aadhar"
+                placeholder="12-digit Aadhar Number"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="add-address">Address</label>
+            <textarea
+              id="add-address"
+              placeholder="Full Address"
+              required
+            ></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="add-ward">Ward Number</label>
+              <input
+                type="text"
+                id="add-ward"
+                placeholder="Ward Number"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="add-pincode">PIN Code</label>
+              <input
+                type="text"
+                id="add-pincode"
+                placeholder="6-digit PIN Code"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="add-family-size">Family Size</label>
+              <select id="add-family-size" required>
+                <option value="">Select Size</option>
+                <option value="1-2">1-2 members</option>
+                <option value="3-5">3-5 members</option>
+                <option value="6-8">6-8 members</option>
+                <option value="8+">More than 8 members</option>
+              </select>
+            </div>
+          </div>
+
+          <h4
+            style="
+              margin-top: 20px;
+              border-bottom: 1px solid #e2e8f0;
+              padding-bottom: 10px;
+            "
+          >
+            Resources
+          </h4>
+          <div id="resource-selection">
+            <p style="color: #718096; margin-bottom: 15px">
+              Resources will be loaded here...
+            </p>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="add-payment-method">Payment Method</label>
+              <select id="add-payment-method" required>
+                <option value="cod">Cash on Delivery</option>
+                <option value="upi">UPI</option>
+                <option value="cards">Credit/Debit Cards</option>
+                <option value="netbanking">Net Banking</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="add-payment-status">Payment Status</label>
+              <select id="add-payment-status" required>
+                <option value="pending">Pending</option>
+                <option value="paid">Paid</option>
+                <option value="failed">Failed</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeModal('add-request-modal')"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Create Request
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" style="display: none">
+      <div class="toast-icon">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <div class="toast-content">
+        <div class="toast-title">Success</div>
+        <div class="toast-message" id="toast-message"></div>
+      </div>
+    </div>
+
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/manageRequest.js"></script>
+  </body>
+</html>
