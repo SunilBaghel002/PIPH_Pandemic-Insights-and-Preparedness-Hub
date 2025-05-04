@@ -11,6 +11,7 @@ const multer = require("multer");
 const fs = require("fs");
 const WebSocket = require("ws");
 const cors = require("cors");
+const Razorpay = require("razorpay");
 const { createObjectCsvWriter } = require("csv-writer");
 
 const app = express();
@@ -315,6 +316,10 @@ app.get("/admin", (req, res) => {
     res.redirect("/login");
   }
 });
+
+const server = app.listen(5000, () =>
+  console.log("Server running on port 5000")
+);
 
 const wss = new WebSocket.Server({ server });
 
@@ -1638,6 +1643,579 @@ app.get("/api/user/profile", authMiddleware, async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server starts at port ${port}`);
+app.get("/api/org/volunteers", authMiddleware, async (req, res) => {
+  try {
+    const org = await Organization.findOne({ creator: req.user.userId });
+    if (!org) return res.status(404).json({ error: "Organization not found" });
+
+    const volunteers = await User.find({ "volunteerData.orgId": org._id });
+    res.json(
+      volunteers.map((v) => {
+        const vData = v.volunteerData.find((d) => d.orgId.equals(org._id));
+        return {
+          _id: v._id,
+          name: v.name,
+          email: v.email,
+          skills: vData.skills,
+          badges: vData.badges,
+          photo: v.photo || "/images/default-photo.png",
+          bio: vData.bio || "No bio provided",
+        };
+      })
+    );
+  } catch (err) {
+    console.error("Error fetching volunteers:", err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
+app.get("/api/org/profile", authMiddleware, async (req, res) => {
+  try {
+    const org = await Organization.findOne({ creator: req.user.userId });
+    if (!org) return res.status(404).json({ error: "Organization not found" });
+
+    res.json({
+      bio: org.description,
+      logo: org.logo,
+      cover: org.cover,
+      stories: org.stories || [],
+    });
+  } catch (err) {
+    console.error("Error fetching org profile:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post(
+  "/api/org/profile",
+  authMiddleware,
+  upload.fields([{ name: "cover" }, { name: "logo" }]),
+  async (req, res) => {
+    try {
+      const org = await Organization.findOne({ creator: req.user.userId });
+      if (!org) return res.status(404).json({ error: "Organization not found" });
+
+      org.description = req.body.bio || org.description;
+      if (req.files.cover) org.cover = "uploads/" + req.files.cover[0].filename;
+      if (req.files.logo) org.logo = "uploads/" + req.files.logo[0].filename;
+      if (req.body.stories) org.stories = JSON.parse(req.body.stories);
+      await org.save();
+      res.json({ message: "Profile updated" });
+    } catch (err) {
+      console.error("Error updating org profile:", err);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+app.get("/api/org/suggestions", authMiddleware, async (req, res) => {
+  try {
+    // Simulate AI suggestion (replace with real AI logic)
+    res.json({ suggestion: "Assign a logistics task to a volunteer with relevant skills." });
+  } catch (err) {
+    console.error("Error fetching suggestions:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Export Data (Volunteers and Events)
+app.get("/api/org/export/:type", authMiddleware, async (req, res) => {
+  try {
+    const org = await Organization.findOne({ creator: req.user.userId });
+    if (!org) return res.status(404).json({ error: "Organization not found" });
+
+    const type = req.params.type;
+    let data, headers;
+
+    if (type === "volunteers") {
+      const volunteers = await User.find({ "volunteerData.orgId": org._id });
+      data = volunteers.map((v) => {
+        const vData = v.volunteerData.find((d) => d.orgId.equals(org._id));
+        return {
+          Name: v.name,
+          Email: v.email,
+          Skills: vData.skills || "N/A",
+          Badges: vData.badges.join(", ") || "None",
+        };
+      });
+      headers = [
+        { id: "Name", title: "Name" },
+        { id: "Email", title: "Email" },
+        { id: "Skills", title: "Skills" },
+        { id: "Badges", title: "Badges" },
+      ];
+    } else if (type === "events") {
+      data = org.projects.map((p) => ({
+        Name: p.name,
+        Description: p.description,
+        Date: p.date.toISOString().split("T")[0],
+      }));
+      headers = [
+        { id: "Name", title: "Name" },
+        { id: "Description", title: "Description" },
+        { id: "Date", title: "Date" },
+      ];
+    } else {
+      return res.status(400).json({ error: "Invalid export type" });
+    }
+
+    const csvWriter = createObjectCsvWriter({
+      path: path.join(__dirname, "public", `${type}.csv`),
+      header: headers,
+    });
+
+    await csvWriter.writeRecords(data);
+    res.download(path.join(__dirname, "public", `${type}.csv`));
+  } catch (err) {
+    console.error("Error exporting data:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+app.post(
+  "/api/user/update",
+  authMiddleware,
+  upload.single("photo"),
+  async (req, res) => {
+    try {
+      const userId = req.user.userId;
+      const { fullName, userName, email, phone } = req.body;
+      let updateData = { name: fullName, username: userName, email, phone };
+      if (req.file) updateData.photo = "uploads/" + req.file.filename;
+
+      const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+        new: true,
+      }).select("-password");
+      res.json({ message: "Profile updated successfully", user: updatedUser });
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+
+// Volunteer and Organization Routes
+app.post("/api/volunteer/signup", authMiddleware, async (req, res) => {
+  const { name, email, phone, skills, location, description, orgId, type, bio } = req.body;
+  try {
+    const user = await User.findById(req.user.userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    if (type === "individual") {
+      user.volunteerData.push({ skills, bio });
+    } else if (type === "create-org") {
+      const org = new Organization({
+        name,
+        email,
+        location,
+        description,
+        creator: req.user.userId,
+      });
+      await org.save();
+      user.volunteerData.push({ orgId: org._id, status: "accepted", skills, bio });
+      user.isOrgHead = true;
+    } else if (type === "join-org") {
+      const org = await Organization.findById(orgId);
+      if (!org) return res.status(404).json({ error: "Organization not found" });
+      user.volunteerData.push({ orgId, skills, bio });
+      sendOrgNotification(orgId, `New volunteer signup request from ${name}`);
+    }
+    await user.save();
+    res.json({ message: "Signup successful" });
+  } catch (err) {
+    console.error("Error in volunteer signup:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+app.get("/api/org/resources", authMiddleware, async (req, res) => {
+  try {
+    // Assuming organization-specific resources are tied to requests or donations
+    const resources = await Resource.find(); // Adjust logic if org-specific resources are needed
+    res.json(resources);
+  } catch (err) {
+    console.error("Error fetching resources:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.get("/api/organizations", async (req, res) => {
+  try {
+    const orgs = await Organization.find().select(
+      "name logo description location volunteerRequirements"
+    );
+    res.json(orgs);
+  } catch (err) {
+    console.error("Error fetching organizations:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.get("/api/org/dashboard", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const org = await Organization.findOne({ creator: userId }).populate(
+      "volunteers"
+    );
+    if (!org) return res.status(404).json({ error: "Organization not found" });
+
+    const volunteers = await User.find({ "volunteerData.orgId": org._id });
+    const projects = org.projects;
+    const beneficiaries = projects.reduce(
+      (sum, proj) => sum + (proj.beneficiaries || 0),
+      0
+    );
+
+    res.json({
+      org,
+      volunteers: volunteers.map((v) => ({
+        _id: v._id,
+        name: v.name,
+        email: v.email,
+        status: v.volunteerData.find((d) => d.orgId.equals(org._id)).status,
+      })),
+      projects,
+      beneficiaries,
+    });
+  } catch (err) {
+    console.error("Error loading org dashboard:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post("/api/org/volunteer/:action", authMiddleware, async (req, res) => {
+  const { volunteerId } = req.body;
+  const action = req.params.action;
+  try {
+    const user = await User.findById(volunteerId);
+    const org = await Organization.findOne({ creator: req.user.userId });
+    if (!user || !org)
+      return res.status(404).json({ error: "User or organization not found" });
+
+    const volunteerData = user.volunteerData.find((d) =>
+      d.orgId.equals(org._id)
+    );
+    if (!volunteerData)
+      return res.status(404).json({ error: "Volunteer not found" });
+
+    if (action === "accept") {
+      volunteerData.status = "accepted";
+      if (!org.volunteers.includes(volunteerId))
+        org.volunteers.push(volunteerId);
+    } else if (action === "reject") {
+      user.volunteerData = user.volunteerData.filter(
+        (d) => !d.orgId.equals(org._id)
+      );
+    }
+    await user.save();
+    await org.save();
+    res.json({ message: `Volunteer ${action}ed` });
+  } catch (err) {
+    console.error("Error managing volunteer:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post("/api/org/volunteer/task", authMiddleware, async (req, res) => {
+  const { volunteerId, task } = req.body;
+  try {
+    if (!volunteerId || !task) {
+      console.error("Missing volunteerId or task:", { volunteerId, task });
+      return res
+        .status(400)
+        .json({ error: "Volunteer ID and task description are required" });
+    }
+
+    const user = await User.findById(volunteerId);
+    const org = await Organization.findOne({ creator: req.user.userId });
+    if (!user || !org) {
+      console.error("User or organization not found:", {
+        volunteerId,
+        userId: req.user.userId,
+      });
+      return res.status(404).json({ error: "User or organization not found" });
+    }
+
+    const volunteerData = user.volunteerData.find((d) =>
+      d.orgId.equals(org._id)
+    );
+    if (!volunteerData) {
+      console.error("Volunteer not associated with this org:", {
+        volunteerId,
+        orgId: org._id,
+      });
+      return res
+        .status(404)
+        .json({ error: "Volunteer not found in this organization" });
+    }
+
+    volunteerData.tasks.push({ description: task, assignedAt: new Date() });
+    await user.save();
+    console.log("Task assigned to volunteer:", {
+      volunteerId,
+      task,
+      tasks: volunteerData.tasks,
+    });
+
+    res.json({ message: "Task assigned successfully" });
+  } catch (err) {
+    console.error("Error in /api/org/volunteer/task:", err.stack);
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
+});
+
+app.post(
+  "/api/org/volunteer/task/complete",
+  authMiddleware,
+  async (req, res) => {
+    const { volunteerId, taskIndex } = req.body;
+    try {
+      const user = await User.findById(volunteerId);
+      const org = await Organization.findOne({ creator: req.user.userId });
+      if (!user || !org)
+        return res
+          .status(404)
+          .json({ error: "User or organization not found" });
+
+      const volunteerData = user.volunteerData.find((d) =>
+        d.orgId.equals(org._id)
+      );
+      if (!volunteerData || taskIndex >= volunteerData.tasks.length) {
+        return res.status(404).json({ error: "Task not found" });
+      }
+
+      user.tasksCompleted += 1;
+      volunteerData.tasks.splice(taskIndex, 1);
+      await user.save();
+      res.json({ message: "Task marked as completed" });
+    } catch (err) {
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+
+app.post("/api/org/events", authMiddleware, async (req, res) => {
+  const { name, description, date } = req.body;
+  try {
+    const org = await Organization.findOne({ creator: req.user.userId });
+    if (!org) return res.status(404).json({ error: "Organization not found" });
+
+    org.projects.push({ name, description, date });
+    await org.save();
+    sendOrgNotification(org._id, `New event created: ${name}`);
+    res.json({ message: "Event created" });
+  } catch (err) {
+    console.error("Error creating event:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post(
+  "/api/org/profile",
+  authMiddleware,
+  upload.fields([{ name: "cover" }, { name: "logo" }]),
+  async (req, res) => {
+    try {
+      const org = await Organization.findOne({ creator: req.user.userId });
+      if (!org)
+        return res.status(404).json({ error: "Organization not found" });
+
+      org.description = req.body.description;
+      if (req.files.cover) org.cover = "uploads/" + req.files.cover[0].filename;
+      if (req.files.logo) org.logo = "uploads/" + req.files.logo[0].filename;
+      await org.save();
+      res.json({ message: "Profile updated" });
+    } catch (err) {
+      console.error("Error updating org profile:", err);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+// Update Resource
+app.put("/api/resources", async (req, res) => {
+  try {
+    const { type, available } = req.body;
+    const resource = await Resource.findOneAndUpdate(
+      { type },
+      {
+        available,
+        status:
+          available <= 10
+            ? "low_stock"
+            : available === 0
+            ? "out_of_stock"
+            : "in_stock",
+      },
+      { new: true }
+    );
+    if (!resource)
+      return res.status(404).json({ message: "Resource not found" });
+    res.json({ message: "Resource updated" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+app.get("/api/org/overview", authMiddleware, async (req, res) => {
+  try {
+    const org = await Organization.findOne({ creator: req.user.userId }).populate("volunteers");
+    if (!org) return res.status(404).json({ error: "Organization not found" });
+
+    const volunteers = await User.find({ "volunteerData.orgId": org._id });
+    const hoursVolunteered = volunteers.reduce((sum, v) => sum + v.volunteerData.find((d) => d.orgId.equals(org._id)).hours, 0);
+
+    res.json({
+      volunteers: org.volunteers.length,
+      projects: org.projects.length,
+      beneficiaries: org.projects.reduce((sum, proj) => sum + (proj.beneficiaries || 0), 0),
+      hoursVolunteered,
+    });
+  } catch (err) {
+    console.error("Error fetching org overview:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Update Donation Status
+app.put("/api/donations/:id", async (req, res) => {
+  try {
+    const { status } = req.body;
+    const donation = await Donation.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+    if (!donation)
+      return res.status(404).json({ message: "Donation not found" });
+    if (status === "claimed") {
+      const resource = await Resource.findOne({ type: donation.type });
+      if (resource) {
+        resource.available += donation.quantity;
+        resource.status = resource.available <= 10 ? "low_stock" : "in_stock";
+        await resource.save();
+      }
+    }
+    res.json({ message: "Donation updated" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.get("/api/org/tasks", authMiddleware, async (req, res) => {
+  try {
+    const org = await Organization.findOne({ creator: req.user.userId });
+    if (!org) return res.status(404).json({ error: "Organization not found" });
+
+    const volunteers = await User.find({ "volunteerData.orgId": org._id });
+    const tasks = volunteers.flatMap((v) =>
+      v.volunteerData
+        .find((d) => d.orgId.equals(org._id))
+        .tasks.map((t) => ({ volunteerName: v.name, description: t.description }))
+    );
+    res.json(tasks);
+  } catch (err) {
+    console.error("Error fetching tasks:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post("/api/org/tasks", authMiddleware, async (req, res) => {
+  const { volunteerId, description } = req.body;
+  try {
+    const user = await User.findById(volunteerId);
+    const org = await Organization.findOne({ creator: req.user.userId });
+    if (!user || !org) return res.status(404).json({ error: "User or organization not found" });
+
+    const volunteerData = user.volunteerData.find((d) => d.orgId.equals(org._id));
+    if (!volunteerData) return res.status(404).json({ error: "Volunteer not found in this organization" });
+
+    volunteerData.tasks.push({ description, assignedAt: new Date() });
+    await user.save();
+    sendOrgNotification(org._id, `Task assigned to ${user.name}: ${description}`);
+    res.json({ message: "Task assigned successfully" });
+  } catch (err) {
+    console.error("Error assigning task:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Delete Donation
+app.delete("/api/donations/:id", async (req, res) => {
+  try {
+    const donation = await Donation.findByIdAndDelete(req.params.id);
+    if (!donation)
+      return res.status(404).json({ message: "Donation not found" });
+    res.json({ message: "Donation rejected" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+app.get("/api/user/dashboard", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const joinedOrgs = await Organization.find({
+      _id: {
+        $in: user.volunteerData
+          .filter((d) => d.status === "accepted")
+          .map((d) => d.orgId),
+      },
+    });
+    const pendingOrgs = await Organization.find({
+      _id: {
+        $in: user.volunteerData
+          .filter((d) => d.status === "pending")
+          .map((d) => d.orgId),
+      },
+    });
+    const allOrgs = await Organization.find();
+    const recommendations = allOrgs
+      .filter((org) => !user.volunteerData.some((d) => d.orgId.equals(org._id)))
+      .slice(0, 3);
+
+    const joinedOrgsWithTasks = joinedOrgs.map((org) => {
+      const volunteerData = user.volunteerData.find(
+        (d) => d.orgId.equals(org._id) && d.status === "accepted"
+      );
+      return {
+        ...org.toObject(),
+        tasks: volunteerData ? volunteerData.tasks : [],
+      };
+    });
+
+    res.json({
+      joinedOrgs: joinedOrgsWithTasks,
+      pendingOrgs,
+      recommendations,
+      volunteerHours: user.volunteerData.reduce((sum, d) => sum + d.hours, 0),
+      impactContributions: user.volunteerData.reduce(
+        (sum, d) => sum + d.contributions,
+        0
+      ),
+    });
+  } catch (err) {
+    console.error("Error loading user dashboard:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.get("/api/hospitals", async (req, res) => {
+  const hospitals = await Hospital.find();
+  res.json(hospitals);
+});
+
+// Utility Function: Generate OTP
+function generateOTP() {
+  return crypto.randomInt(100000, 999999).toString();
+}
+
+// Start the Server
+server.on("error", (error) => {
+  if (error.code === "EADDRINUSE") {
+    console.error(`Port 5000 is already in use. Trying port 5001...`);
+    server.listen(5001, () => console.log(`Server running on port 5001`));
+  } else {
+    console.error("Server error:", error);
+    process.exit(1);
+  }
+});
+
+// app.listen(port, () => {
+//   console.log(`Server starts at port ${port}`);
+// });
