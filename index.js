@@ -286,6 +286,9 @@ app.get("/stats", (req, res) =>
 app.get("/profile", (req, res) =>
   res.sendFile(path.join(__dirname, "/views/updateProfile.html"))
 );
+app.get("/user-dashboard", (req, res) =>
+  res.sendFile(path.join(__dirname, "/views/user-dashboard.html"))
+);
 
 const allowedEmails = [
   "sunilnp@acem.edu.in",
