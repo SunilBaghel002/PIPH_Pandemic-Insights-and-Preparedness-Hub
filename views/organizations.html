@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pandemic Response - Organizations</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/css/firstPage.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+    <link rel="stylesheet" href="/css/organizations.css" />
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="logo" onclick="window.location.href='/'">
+      <img
+        src="/images/logo.png"
+        alt="Pandemic Response Logo"
+        class="logo-img"
+      />
+    </div>
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-links">
+        <a href="/" class="sidebar-link"
+          ><i class="fa-solid fa-home"></i> Home</a
+        >
+        <a href="/firstPage" class="sidebar-link"
+          ><i class="fa-solid fa-virus"></i> Dashboard</a
+        >
+        <a href="/pandamic" class="sidebar-link"
+          ><i class="fa-solid fa-virus"></i> Live Pandemic Stats</a
+        >
+        <a href="/request" class="sidebar-link"
+          ><i class="fa-solid fa-box-open"></i> Need Resources</a
+        >
+        <a href="/map" class="sidebar-link"
+          ><i class="fa-solid fa-hospital"></i> Find Hospitals</a
+        >
+        <a href="/stats" class="sidebar-link"
+          ><i class="fa-solid fa-chart-pie"></i> Graph Analytics</a
+        >
+        <a href="/organizations" class="sidebar-link"
+          ><i class="fa-solid fa-building"></i> Organizations</a
+        >
+        <a href="/org-dashboard" class="sidebar-link"
+          ><i class="fa-solid fa-tachometer-alt"></i> Org Dashboard</a
+        >
+        <a href="/user-dashboard" class="sidebar-link"
+          ><i class="fa-solid fa-user"></i> User Dashboard</a
+        >
+        <a href="/alerts" class="sidebar-link"
+          ><i class="fa-solid fa-bell"></i> Alerts</a
+        >
+        <a href="/profile" class="sidebar-link"
+          ><i class="fa-solid fa-id-card"></i> Profile</a
+        >
+      </div>
+      <div class="user-profile">
+        <img
+          src="/images/logohaire.png"
+          alt="User Photo"
+          id="user-photo"
+          class="user-photo"
+          onclick="toggleSidebarMobile()"
+        />
+        <div class="user-info">
+          <span id="user-name">User Name</span>
+        </div>
+        <button class="profile-btn" onclick="window.location.href='/profile'">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-toggle" onclick="toggleSidebarMobile()">
+      <i class="fa-solid fa-bars mobile-hamburger"></i>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <nav class="navbar">
+        <a href="#listing" class="nav-link active">Organizations</a>
+        <button class="volunteer-btn" onclick="openVolunteerModal()">
+          <i class="fa-solid fa-handshake-angle"></i> Become a Volunteer
+        </button>
+      </nav>
+
+      <section class="featured-orgs">
+        <h2><i class="fa-solid fa-star"></i> Featured Organizations</h2>
+        <div class="featured-grid" id="featured-grid"></div>
+      </section>
+
+      <section id="listing" class="org-listing">
+        <h2><i class="fa-solid fa-building"></i> Volunteer Organizations</h2>
+        <div class="filters">
+          <input
+            type="text"
+            id="org-filter"
+            placeholder="Search Organizations..."
+          />
+          <select id="category-filter">
+            <option value="">All Categories</option>
+            <option value="NGO">NGO</option>
+            <option value="Hospital">Hospital</option>
+            <option value="Org">Organization</option>
+          </select>
+          <select id="location-filter">
+            <option value="">All Locations</option>
+          </select>
+          <select id="sort-filter">
+            <option value="name">Sort by Name</option>
+            <option value="location">Sort by Location</option>
+            <option value="popularity">Sort by Popularity</option>
+          </select>
+        </div>
+        <div class="org-grid" id="org-grid"></div>
+        <button id="load-more">Load More</button>
+      </section>
+
+      <!-- Volunteer Modal -->
+      <div class="modal" id="volunteer-modal">
+        <div class="modal-content">
+          <span class="modal-close" onclick="closeVolunteerModal()">×</span>
+          <h2>
+            <i class="fa-solid fa-handshake-angle"></i> Become a Volunteer
+          </h2>
+          <div class="volunteer-tabs">
+            <button class="tab-btn active" onclick="showTab('individual')">
+              Individual
+            </button>
+            <button class="tab-btn" onclick="showTab('create-org')">
+              Create Org
+            </button>
+            <button class="tab-btn" onclick="showTab('join-org')">
+              Join Org
+            </button>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+          </div>
+
+          <form id="individual-form" class="volunteer-form active">
+            <div class="form-step" data-step="1">
+              <div class="input-group">
+                <i class="fa-solid fa-user"></i>
+                <input
+                  type="text"
+                  id="ind-name"
+                  placeholder="Full Name"
+                  required
+                />
+              </div>
+              <div class="input-group">
+                <i class="fa-solid fa-envelope"></i>
+                <input
+                  type="email"
+                  id="ind-email"
+                  placeholder="Email"
+                  required
+                />
+              </div>
+              <button
+                type="button"
+                class="next-btn"
+                onclick="nextStep('individual', 2)"
+              >
+                Next
+              </button>
+            </div>
+            <div class="form-step hidden" data-step="2">
+              <div class="input-group">
+                <i class="fa-solid fa-phone"></i>
+                <select id="ind-country-code" required>
+                  <option value="+1">+1 (US)</option>
+                  <option value="+91">+91 (IN)</option>
+                  <option value="+44">+44 (UK)</option>
+                </select>
+                <input
+                  type="tel"
+                  id="ind-phone"
+                  placeholder="Phone Number"
+                  required
+                />
+              </div>
+              <div class="input-group">
+                <i class="fa-solid fa-briefcase"></i>
+                <input
+                  type="text"
+                  id="ind-skills"
+                  placeholder="Skills (e.g., Medical, Logistics)"
+                  required
+                />
+              </div>
+              <button
+                type="button"
+                class="prev-btn"
+                onclick="prevStep('individual', 1)"
+              >
+                Previous
+              </button>
+              <button type="submit" class="submit-btn">Submit</button>
+            </div>
+          </form>
+
+          <form id="create-org-form" class="volunteer-form hidden">
+            <div class="form-step" data-step="1">
+              <div class="input-group">
+                <i class="fa-solid fa-building"></i>
+                <input
+                  type="text"
+                  id="org-name"
+                  placeholder="Organization Name"
+                  required
+                />
+              </div>
+              <div class="input-group">
+                <i class="fa-solid fa-envelope"></i>
+                <input
+                  type="email"
+                  id="org-email"
+                  placeholder="Contact Email"
+                  required
+                />
+              </div>
+              <button
+                type="button"
+                class="next-btn"
+                onclick="nextStep('create-org', 2)"
+              >
+                Next
+              </button>
+            </div>
+            <div class="form-step hidden" data-step="2">
+              <div class="input-group">
+                <i class="fa-solid fa-map-marker-alt"></i>
+                <input
+                  type="text"
+                  id="org-location"
+                  placeholder="Location"
+                  required
+                />
+              </div>
+              <div class="input-group">
+                <i class="fa-solid fa-file-alt"></i>
+                <textarea
+                  id="org-description"
+                  placeholder="Description"
+                  required
+                ></textarea>
+              </div>
+              <button
+                type="button"
+                class="prev-btn"
+                onclick="prevStep('create-org', 1)"
+              >
+                Previous
+              </button>
+              <button type="submit" class="submit-btn">Submit</button>
+            </div>
+          </form>
+
+          <form id="join-org-form" class="volunteer-form hidden">
+            <div class="form-step" data-step="1">
+              <div class="input-group">
+                <i class="fa-solid fa-search"></i>
+                <input
+                  type="text"
+                  id="org-search"
+                  placeholder="Search Organizations"
+                />
+              </div>
+              <div class="org-list" id="org-list"></div>
+              <button
+                type="button"
+                class="next-btn"
+                onclick="nextStep('join-org', 2)"
+              >
+                Next
+              </button>
+            </div>
+            <div class="form-step hidden" data-step="2">
+              <div class="input-group">
+                <i class="fa-solid fa-user"></i>
+                <input
+                  type="text"
+                  id="join-name"
+                  placeholder="Your Full Name"
+                  required
+                />
+              </div>
+              <div class="input-group">
+                <i class="fa-solid fa-envelope"></i>
+                <input
+                  type="email"
+                  id="join-email"
+                  placeholder="Your Email"
+                  required
+                />
+              </div>
+              <button
+                type="button"
+                class="prev-btn"
+                onclick="prevStep('join-org', 1)"
+              >
+                Previous
+              </button>
+              <button type="submit" class="submit-btn">Join</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Organization Details Modal -->
+      <div class="modal" id="org-details-modal">
+        <div class="modal-content">
+          <span class="modal-close" onclick="closeDetailsModal()">×</span>
+          <h2 id="org-details-name"></h2>
+          <p id="org-details-category"></p>
+          <p id="org-details-location"></p>
+          <p id="org-details-description"></p>
+          <div class="btn-group">
+            <button class="join-btn" onclick="joinFromDetails()">
+              Join Now
+            </button>
+            <button class="contact-btn" onclick="contactFromDetails()">
+              Contact
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tutorial Overlay -->
+      <div class="tutorial-overlay" id="tutorial-overlay">
+        <div class="tutorial-box">
+          <h3 id="tutorial-title"></h3>
+          <p id="tutorial-text"></p>
+          <div class="tutorial-buttons">
+            <button class="tutorial-btn skip-btn" id="skip-tutorial">
+              Skip Tutorial
+            </button>
+            <button class="tutorial-btn gotcha-btn" id="next-tutorial">
+              Got It
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>© 2025 Pandemic Response. All Rights Reserved.</p>
+        <div class="footer-links">
+          <a href="/privacy"><i class="fa-solid fa-lock"></i> Privacy Policy</a>
+          <a href="/terms"
+            ><i class="fa-solid fa-file-contract"></i> Terms of Service</a
+          >
+          <a href="/contact"><i class="fa-solid fa-envelope"></i> Contact Us</a>
+        </div>
+      </footer>
+    </main>
+    <div class="grey"></div>
+    <div class="popup" id="popup">
+      <span class="popup-text" id="popup-text"></span>
+      <button class="close-popup" id="close-popup">Close</button>
+    </div>
+
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/organizations.js"></script>
+  </body>
+</html>

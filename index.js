@@ -273,6 +273,12 @@ app.get("/alerts", (req, res) =>
 app.get("/hospital-dashboard", (req, res) =>
   res.sendFile(path.join(__dirname, "/views/hospital-dashboard.html"))
 );
+app.get("/organizations", (req, res) =>
+  res.sendFile(path.join(__dirname, "/views/organizations.html"))
+);
+app.get("/org-dashboard", (req, res) =>
+  res.sendFile(path.join(__dirname, "/views/org-dashboard.html"))
+);
 
 const allowedEmails = [
   "sunilnp@acem.edu.in",
