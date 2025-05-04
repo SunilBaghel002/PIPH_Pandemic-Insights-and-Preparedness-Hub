@@ -1,0 +1,605 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Emergency Dashboard</title>
+  <meta name="description" content="Hospital Emergency Response Dashboard - Real-time emergency management system">
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+      <link rel="stylesheet" href="/css/firstPage.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+
+  <!-- For maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+  <!-- For charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="/css/hospital-dashboard.css" />
+</head>
+
+<body>
+  <!-- Sidebar -->
+   <!-- <div class="sidebar">
+  <div class="logo" onclick="window.location.href='/'">
+    <img src="/images/logo.png" alt="Pandemic Response Logo" class="logo-img" />
+  </div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-links" id="sidebar-links">
+      <a href="/" class="sidebar-link"
+        ><i class="fa-solid fa-home"></i> Home</a
+      >
+      <a href="/firstPage" class="sidebar-link"
+        ><i class="fa-solid fa-virus"></i> Dashboard</a
+      >
+      <a href="/pandamic" class="sidebar-link"
+        ><i class="fa-solid fa-virus"></i> Live Pandemic Stats</a
+      >
+      <a href="/request" class="sidebar-link"
+        ><i class="fa-solid fa-box-open"></i> Need Resources</a
+      >
+      <a href="/map" class="sidebar-link"
+        ><i class="fa-solid fa-hospital"></i> Find Hospitals</a
+      >
+      <a href="/stats" class="sidebar-link"
+        ><i class="fa-solid fa-chart-pie"></i> Graph Analytics</a
+      >
+      <a href="/organizations" class="sidebar-link"
+        ><i class="fa-solid fa-building"></i> Organizations</a
+      >
+      <a href="/org-dashboard" class="sidebar-link"
+        ><i class="fa-solid fa-tachometer-alt"></i> Org Dashboard</a
+      >
+      <a href="/user-dashboard" class="sidebar-link"
+        ><i class="fa-solid fa-user"></i> User Dashboard</a
+      >
+      <a href="/alerts" class="sidebar-link"
+        ><i class="fa-solid fa-alert"></i> Alerts</a
+      >
+      <a href="/profile" class="sidebar-link"
+        ><i class="fa-solid fa-id-card"></i> Profile</a
+      >
+      <a href="/admin" class="sidebar-link active"
+          ><i class="fa-solid fa-cogs"></i> Admin Dashboard</a
+        >
+        <a href="/hospital-dashboard" class="sidebar-link active"
+          ><i class="fa-solid fa-heartbeat"></i> Hospital Dashboard</a
+        >
+    </div>
+    <div class="user-profile">
+      <img
+        src="/default-user.png"
+        alt="User Photo"
+        id="user-photo"
+        class="user-photo"
+        onclick="toggleSidebarMobile()"
+      />
+      <div class="user-info">
+        <span id="user-name">User Name</span>
+        <span id="user-email">user@example.com</span>
+      </div>
+      <button class="profile-btn" onclick="window.location.href='/profile'">
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-toggle" onclick="toggleSidebarMobile()">
+    <i class="fa-solid fa-bars mobile-hamburger"></i>
+  </div>
+</div> -->
+<div class="main">
+  <header class="top-header">
+      <div class="alert-system-bar" id="criticalAlertBar">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>EMERGENCY ALERT: Major incident reported in Downtown District</span>
+      </div>
+      <div class="government-bar">
+          <div class="govt-title">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Blue_and_white_Health_star.svg/1200px-Blue_and_white_Health_star.svg.png"
+                  alt="Government Logo" class="govt-logo">
+              <h1>National Health Emergency Service</h1>
+          </div>
+          <div class="govt-actions">
+              <button class="lang-toggle">English <i class="fas fa-chevron-down"></i></button>
+              <button class="accessibility-btn"><i class="fas fa-universal-access"></i></button>
+              <span id="current-time">10:45 AM</span>
+          </div>
+      </div>
+  </header>
+
+
+  <div class="dashboard-container">
+      <div class="dashboard-header">
+          <h1>Emergency Response Dashboard</h1>
+          <p class="dashboard-subtitle">Hospital Administrator Control Panel</p>
+
+          <div class="alert-banner" id="alertBanner">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span>4 Critical Emergencies Active</span>
+              <button class="view-all-btn">View All</button>
+          </div>
+      </div>
+
+      <div class="quick-stats">
+          <div class="stat-card emergency">
+              <div class="stat-icon">
+                  <i class="fas fa-exclamation-circle"></i>
+              </div>
+              <div class="stat-details">
+                  <h3>Active Emergencies</h3>
+                  <p class="stat-value">12</p>
+                  <p class="stat-trend up">
+                      <i class="fas fa-arrow-up"></i> 8% from yesterday
+                  </p>
+              </div>
+          </div>
+
+          <div class="stat-card resources">
+              <div class="stat-icon">
+                  <i class="fas fa-heartbeat"></i>
+              </div>
+              <div class="stat-details">
+                  <h3>Available Beds</h3>
+                  <p class="stat-value">43</p>
+                  <p class="stat-trend down">
+                      <i class="fas fa-arrow-down"></i> 5% from yesterday
+                  </p>
+              </div>
+          </div>
+
+          <div class="stat-card helpers">
+              <div class="stat-icon">
+                  <i class="fas fa-user-md"></i>
+              </div>
+              <div class="stat-details">
+                  <h3>Active Responders</h3>
+                  <p class="stat-value">28</p>
+                  <p class="stat-trend up">
+                      <i class="fas fa-arrow-up"></i> 12% from yesterday
+                  </p>
+              </div>
+          </div>
+
+          <div class="stat-card pandemic">
+              <div class="stat-icon">
+                  <i class="fas fa-virus"></i>
+              </div>
+              <div class="stat-details">
+                  <h3>New Cases Today</h3>
+                  <p class="stat-value">156</p>
+                  <p class="stat-trend down">
+                      <i class="fas fa-arrow-down"></i> 3% from yesterday
+                  </p>
+              </div>
+          </div>
+      </div>
+
+      <!-- Reports Section -->
+      <section class="reports-grid">
+          <div class="report-card">
+              <div class="report-header">
+                  <h3><i class="fas fa-file-medical-alt"></i> Daily Emergency Summary</h3>
+              </div>
+              <div class="report-content">
+                  <div class="report-stats">
+                      <div class="report-stat">
+                          <div class="report-value">24</div>
+                          <div class="report-label">Total Incidents</div>
+                      </div>
+                      <div class="report-stat">
+                          <div class="report-value">18</div>
+                          <div class="report-label">Resolved</div>
+                      </div>
+                      <div class="report-stat">
+                          <div class="report-value">6</div>
+                          <div class="report-label">Active</div>
+                      </div>
+                  </div>
+                  <p class="report-description">
+                      Summary of emergency incidents reported in the last 24 hours. Response time average: 8.2
+                      minutes.
+                  </p>
+              </div>
+              <div class="report-footer">
+                  <div class="report-date">April 5, 2025</div>
+                  <div class="report-actions">
+                      <button class="report-btn"><i class="fas fa-download"></i> Download</button>
+                      <button class="report-btn"><i class="fas fa-share"></i> Share</button>
+                  </div>
+              </div>
+          </div>
+
+          <div class="report-card">
+              <div class="report-header">
+                  <h3><i class="fas fa-hospital-user"></i> Hospital Capacity Report</h3>
+              </div>
+              <div class="report-content">
+                  <div class="report-stats">
+                      <div class="report-stat">
+                          <div class="report-value">82%</div>
+                          <div class="report-label">Occupancy</div>
+                      </div>
+                      <div class="report-stat">
+                          <div class="report-value">43</div>
+                          <div class="report-label">Available</div>
+                      </div>
+                      <div class="report-stat">
+                          <div class="report-value">12</div>
+                          <div class="report-label">ICU Free</div>
+                      </div>
+                  </div>
+                  <p class="report-description">
+                      Current hospital network capacity status. Three hospitals are nearly at capacity and may need
+                      additional resources.
+                  </p>
+              </div>
+              <div class="report-footer">
+                  <div class="report-date">Updated: 10:30 AM</div>
+                  <div class="report-actions">
+                      <button class="report-btn"><i class="fas fa-download"></i> Download</button>
+                      <button class="report-btn"><i class="fas fa-share"></i> Share</button>
+                  </div>
+              </div>
+          </div>
+
+          <div class="report-card">
+              <div class="report-header">
+                  <h3><i class="fas fa-ambulance"></i> Response Time Analysis</h3>
+              </div>
+              <div class="report-content">
+                  <div class="report-stats">
+                      <div class="report-stat">
+                          <div class="report-value">8.2</div>
+                          <div class="report-label">Min Avg</div>
+                      </div>
+                      <div class="report-stat">
+                          <div class="report-value">5.5</div>
+                          <div class="report-label">Urban</div>
+                      </div>
+                      <div class="report-stat">
+                          <div class="report-value">12.8</div>
+                          <div class="report-label">Rural</div>
+                      </div>
+                  </div>
+                  <p class="report-description">
+                      Analysis of emergency response times across different areas. Response times have improved by 12%
+                      compared to last month.
+                  </p>
+              </div>
+              <div class="report-footer">
+                  <div class="report-date">April 5, 2025</div>
+                  <div class="report-actions">
+                      <button class="report-btn"><i class="fas fa-download"></i> Download</button>
+                      <button class="report-btn"><i class="fas fa-share"></i> Share</button>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      <div class="main-grid">
+          <!-- Emergency Map Section -->
+          <section class="grid-item emergency-map">
+              <div class="section-header">
+                  <h2><i class="fas fa-map-marker-alt"></i> Emergency Locations</h2>
+                  <div class="section-actions">
+                      <button class="refresh-btn"><i class="fas fa-sync-alt"></i></button>
+                      <button class="expand-btn"><i class="fas fa-expand"></i></button>
+                  </div>
+              </div>
+              <div class="section-content">
+                  <div id="emergency-map" class="map-container"></div>
+                  <div class="map-legend">
+                      <div class="legend-item">
+                          <span class="legend-marker critical"></span>
+                          <span>Critical</span>
+                      </div>
+                      <div class="legend-item">
+                          <span class="legend-marker high"></span>
+                          <span>High</span>
+                      </div>
+                      <div class="legend-item">
+                          <span class="legend-marker medium"></span>
+                          <span>Medium</span>
+                      </div>
+                      <div class="legend-item">
+                          <span class="legend-marker low"></span>
+                          <span>Low</span>
+                      </div>
+                  </div>
+              </div>
+          </section>
+
+          <!-- Recent Emergencies Section -->
+          <section class="grid-item recent-emergencies">
+              <div class="section-header">
+                  <h2><i class="fas fa-bell"></i> Recent Emergency Alerts</h2>
+                  <div class="section-actions">
+                      <button class="filter-btn"><i class="fas fa-filter"></i></button>
+                  </div>
+              </div>
+              <div class="section-content">
+                  <ul class="alert-list" id="alertList">
+                      <!-- Alert items will be dynamically generated -->
+                  </ul>
+              </div>
+          </section>
+
+          <!-- Resource Management Section -->
+          <section class="grid-item resource-management">
+              <div class="section-header">
+                  <h2><i class="fas fa-briefcase-medical"></i> Resource Availability</h2>
+                  <div class="section-actions">
+                      <select class="resource-filter" id="resourceFilter">
+                          <option value="all">All Resources</option>
+                          <option value="beds">Hospital Beds</option>
+                          <option value="equipment">Medical Equipment</option>
+                          <option value="staff">Medical Staff</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="section-content">
+                  <div class="resource-charts">
+                      <div class="resource-chart">
+                          <div class="chart-title">ICU Beds</div>
+                          <div class="chart-visual">
+                              <div class="progress-circle" data-percentage="68">
+                                  <div class="progress-content">
+                                      <h4>68%</h4>
+                                      <p>Occupied</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="resource-chart">
+                          <div class="chart-title">Ventilators</div>
+                          <div class="chart-visual">
+                              <div class="progress-circle" data-percentage="45">
+                                  <div class="progress-content">
+                                      <h4>45%</h4>
+                                      <p>In Use</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="resource-chart">
+                          <div class="chart-title">Ambulances</div>
+                          <div class="chart-visual">
+                              <div class="progress-circle" data-percentage="82">
+                                  <div class="progress-content">
+                                      <h4>82%</h4>
+                                      <p>Dispatched</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="resource-chart">
+                          <div class="chart-title">Staff</div>
+                          <div class="chart-visual">
+                              <div class="progress-circle" data-percentage="75">
+                                  <div class="progress-content">
+                                      <h4>75%</h4>
+                                      <p>On Duty</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <button class="allocate-btn"><i class="fas fa-tasks"></i> Allocate Resources</button>
+              </div>
+          </section>
+
+          <!-- Pandemic Trends Section -->
+          <section class="grid-item pandemic-trends">
+              <div class="section-header">
+                  <h2><i class="fas fa-chart-line"></i> Pandemic Trends</h2>
+                  <div class="section-actions">
+                      <select class="time-filter" id="pandemicTimeFilter">
+                          <option value="7days">Last 7 Days</option>
+                          <option value="30days">Last 30 Days</option>
+                          <option value="90days">Last 90 Days</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="section-content">
+                  <canvas id="pandemic-chart" height="250"></canvas>
+              </div>
+          </section>
+
+          <!-- Hospital Capacity Section -->
+          <section class="grid-item hospital-capacity">
+              <div class="section-header">
+                  <h2><i class="fas fa-hospital"></i> Hospital Network Capacity</h2>
+                  <div class="section-actions">
+                      <button class="refresh-btn"><i class="fas fa-sync-alt"></i></button>
+                  </div>
+              </div>
+              <div class="section-content">
+                  <div class="hospital-grid" id="hospitalGrid">
+                      <!-- Hospital capacity cards will be dynamically generated -->
+                  </div>
+              </div>
+          </section>
+
+          <!-- Staff Deployment Section -->
+          <section class="grid-item staff-deployment">
+              <div class="section-header">
+                  <h2><i class="fas fa-users"></i> Emergency Team Deployment</h2>
+              </div>
+              <div class="section-content">
+                  <div class="team-status">
+                      <div class="team-header">
+                          <span class="team-label">Available Teams:</span>
+                          <span class="team-count">8</span>
+                      </div>
+                      <div class="team-header">
+                          <span class="team-label">Deployed Teams:</span>
+                          <span class="team-count">12</span>
+                      </div>
+                  </div>
+                  <div class="deployment-actions">
+                      <button class="action-btn deploy-btn"><i class="fas fa-user-plus"></i> Deploy Team</button>
+                      <button class="action-btn recall-btn"><i class="fas fa-user-minus"></i> Recall Team</button>
+                      <button class="action-btn rotate-btn"><i class="fas fa-sync"></i> Rotate Staff</button>
+                  </div>
+              </div>
+          </section>
+
+          <!-- Communication Hub Section -->
+          <section class="grid-item communication-hub">
+              <div class="section-header">
+                  <h2><i class="fas fa-broadcast-tower"></i> Communication Hub</h2>
+              </div>
+              <div class="section-content">
+                  <div class="communication-tabs">
+                      <button class="comm-tab active" data-target="broadcasts">Broadcasts</button>
+                      <button class="comm-tab" data-target="alerts">Alerts</button>
+                      <button class="comm-tab" data-target="messages">Messages</button>
+                  </div>
+                  <div class="communication-content active" id="broadcasts">
+                      <div class="broadcast-form">
+                          <input type="text" placeholder="Type broadcast message..." id="broadcastMessage">
+                          <div class="broadcast-targets">
+                              <label><input type="checkbox" checked> All Hospitals</label>
+                              <label><input type="checkbox" checked> Emergency Teams</label>
+                              <label><input type="checkbox"> Volunteers</label>
+                          </div>
+                          <button class="send-broadcast"><i class="fas fa-paper-plane"></i> Send Broadcast</button>
+                      </div>
+                      <div class="broadcast-history">
+                          <h4>Recent Broadcasts</h4>
+                          <ul class="broadcast-list">
+                              <li class="broadcast-item">
+                                  <span class="broadcast-time">10:23 AM</span>
+                                  <span class="broadcast-message">All available ambulances requested to Central
+                                      Hospital</span>
+                              </li>
+                              <li class="broadcast-item">
+                                  <span class="broadcast-time">09:45 AM</span>
+                                  <span class="broadcast-message">Traffic accident on Highway 101, prepare trauma
+                                      units</span>
+                              </li>
+                          </ul>
+                      </div>
+                  </div>
+                  <div class="communication-content" id="alerts">
+                      <!-- Alerts content -->
+                      <p>Emergency alert configuration</p>
+                  </div>
+                  <div class="communication-content" id="messages">
+                      <!-- Direct messages content -->
+                      <p>Direct messaging system</p>
+                  </div>
+              </div>
+          </section>
+      </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Modal Container -->
+  <div class="modal-overlay" id="modalOverlay">
+      <div class="modal" id="modal">
+          <div class="modal-header">
+              <h3 id="modalTitle">Emergency Details</h3>
+              <button class="close-modal" id="closeModal"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="modal-content" id="modalContent">
+              <!-- Modal content will be inserted by JavaScript -->
+          </div>
+          <div class="modal-footer">
+              <button class="secondary-btn" id="cancelModal">Cancel</button>
+              <button class="primary-btn" id="confirmModal">Confirm</button>
+          </div>
+      </div>
+  </div>
+
+  <!-- Emergency Response Form Modal -->
+  <div class="modal-overlay" id="responseModalOverlay">
+      <div class="modal" id="responseModal">
+          <div class="modal-header">
+              <h3 id="responseModalTitle">Dispatch Emergency Response</h3>
+              <button class="close-modal" id="closeResponseModal"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="modal-content">
+              <div class="form-warning">
+                  <i class="fas fa-exclamation-triangle"></i> This action will dispatch emergency resources. Please
+                  confirm details carefully.
+              </div>
+              <form id="responseForm" class="response-form">
+                  <div class="form-group">
+                      <label for="emergencyType">Emergency Type:</label>
+                      <select id="emergencyType" class="form-control">
+                          <option value="medical">Medical Emergency</option>
+                          <option value="trauma">Trauma</option>
+                          <option value="fire">Fire</option>
+                          <option value="hazmat">Hazardous Materials</option>
+                          <option value="other">Other</option>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="responseLevel">Response Level:</label>
+                      <select id="responseLevel" class="form-control">
+                          <option value="1">Level 1 - Minor</option>
+                          <option value="2">Level 2 - Moderate</option>
+                          <option value="3">Level 3 - Major</option>
+                          <option value="4">Level 4 - Critical</option>
+                          <option value="5">Level 5 - Catastrophic</option>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="responseLocation">Location:</label>
+                      <input type="text" id="responseLocation" class="form-control" placeholder="Emergency location">
+                  </div>
+                  <div class="form-row">
+                      <div class="form-group half">
+                          <label for="responseUnits">Units Required:</label>
+                          <input type="number" id="responseUnits" class="form-control" min="1" value="1">
+                      </div>
+                      <div class="form-group half">
+                          <label for="responseETA">Estimated Response Time (min):</label>
+                          <input type="number" id="responseETA" class="form-control" min="1" value="5">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="responseNotes">Additional Notes:</label>
+                      <textarea id="responseNotes" class="form-control" rows="3"
+                          placeholder="Additional information about the emergency"></textarea>
+                  </div>
+                  <div class="form-group checkbox-group">
+                      <label class="checkbox-label">
+                          <input type="checkbox" id="notifyHospitals" checked> Notify Nearby Hospitals
+                      </label>
+                  </div>
+                  <div class="form-group checkbox-group">
+                      <label class="checkbox-label">
+                          <input type="checkbox" id="requestBackup"> Request Backup
+                      </label>
+                  </div>
+                  <div class="form-group checkbox-group">
+                      <label class="checkbox-label">
+                          <input type="checkbox" id="activateProtocol"> Activate Emergency Protocol
+                      </label>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button class="secondary-btn" id="cancelResponse">Cancel</button>
+              <button class="primary-btn" id="confirmResponse">Dispatch</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+  <!-- JavaScript -->
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/hospital-dashboard.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Disaster & Pandemic Alert System</title>
+    <meta name="description"
+        content="Get information about disasters and pandemics, safety measures, and real-time alerts" />
+        <link rel="stylesheet" href="/css/firstPage.css" />
+        <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+    <link rel="stylesheet" href="/css/alert.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="logo" onclick="window.location.href='/'">
+        <img src="/images/logo.png" alt="Pandemic Response Logo" class="logo-img" />
+      </div>
+      <div class="sidebar" id="sidebar">
+        <div class="sidebar-links" id="sidebar-links">
+          <a href="/" class="sidebar-link"
+            ><i class="fa-solid fa-home"></i> Home</a
+          >
+          <a href="/firstPage" class="sidebar-link"
+            ><i class="fa-solid fa-virus"></i> Dashboard</a
+          >
+          <a href="/pandamic" class="sidebar-link"
+            ><i class="fa-solid fa-virus"></i> Live Pandemic Stats</a
+          >
+          <a href="/request" class="sidebar-link"
+            ><i class="fa-solid fa-box-open"></i> Need Resources</a
+          >
+          <a href="/map" class="sidebar-link"
+            ><i class="fa-solid fa-hospital"></i> Find Hospitals</a
+          >
+          <a href="/stats" class="sidebar-link"
+            ><i class="fa-solid fa-chart-pie"></i> Graph Analytics</a
+          >
+          <a href="/organizations" class="sidebar-link"
+            ><i class="fa-solid fa-building"></i> Organizations</a
+          >
+          <a href="/org-dashboard" class="sidebar-link"
+            ><i class="fa-solid fa-tachometer-alt"></i> Org Dashboard</a
+          >
+          <a href="/user-dashboard" class="sidebar-link"
+            ><i class="fa-solid fa-user"></i> User Dashboard</a
+          >
+          <a href="/alerts" class="sidebar-link"
+        ><i class="fa-solid fa-alert"></i> Alerts</a
+      >
+          <a href="/profile" class="sidebar-link"
+            ><i class="fa-solid fa-id-card"></i> Profile</a
+          >
+        </div>
+        <div class="user-profile">
+          <img
+            src="/default-user.png"
+            alt="User Photo"
+            id="user-photo"
+            class="user-photo"
+            onclick="toggleSidebarMobile()"
+          />
+          <div class="user-info">
+            <span id="user-name">User Name</span>
+            <span id="user-email">user@example.com</span>
+          </div>
+          <button class="profile-btn" onclick="window.location.href='/profile'">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+      <div class="mobile-toggle" onclick="toggleSidebarMobile()">
+        <i class="fa-solid fa-bars mobile-hamburger"></i>
+      </div>
+    <header>
+        <nav>
+            <!-- <div class="logo">
+                <i class="fas fa-shield-virus"></i>
+                <h1>SafeGuard</h1>
+            </div> -->
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#disasters">Disasters</a></li>
+                <li><a href="#symptoms">Symptoms</a></li>
+                <li><a href="#safety">Safety</a></li>
+                <li><a href="#alerts">Alerts</a></li>
+            </ul>
+            <div class="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Stay Informed, Stay Safe</h1>
+            <p>Learn about common disasters and pandemics, recognize symptoms, and discover safety measures to protect
+                yourself and your loved ones.</p>
+            <button class="btn primary" onclick="scrollToSection('disasters')">Explore Disasters</button>
+            <button class="btn secondary" onclick="scrollToSection('symptoms')">Check Symptoms</button>
+        </div>
+    </section>
+
+    <section id="disasters" class="disasters-section">
+        <h2 class="section-title">Common Disasters & Pandemics</h2>
+        <div class="card-container">
+            <div class="card" data-disaster="covid19">
+                <div class="card-icon"><i class="fas fa-virus"></i></div>
+                <h3>COVID-19</h3>
+                <p>A respiratory illness caused by the SARS-CoV-2 virus that spread worldwide from 2019.</p>
+                <button class="btn small" onclick="showDetails('covid19')">Learn More</button>
+            </div>
+            <div class="card" data-disaster="flu">
+                <div class="card-icon"><i class="fas fa-head-side-cough"></i></div>
+                <h3>Influenza</h3>
+                <p>A highly contagious respiratory infection that can cause seasonal epidemics.</p>
+                <button class="btn small" onclick="showDetails('flu')">Learn More</button>
+            </div>
+            <div class="card" data-disaster="earthquake">
+                <div class="card-icon"><i class="fas fa-house-damage"></i></div>
+                <h3>Earthquake</h3>
+                <p>Sudden ground shaking caused by the movement of tectonic plates under Earth's surface.</p>
+                <button class="btn small" onclick="showDetails('earthquake')">Learn More</button>
+            </div>
+            <div class="card" data-disaster="flood">
+                <div class="card-icon"><i class="fas fa-water"></i></div>
+                <h3>Flood</h3>
+                <p>Overflow of water that submerges usually dry land, often due to heavy rainfall or storms.</p>
+                <button class="btn small" onclick="showDetails('flood')">Learn More</button>
+            </div>
+            <div class="card" data-disaster="hurricane">
+                <div class="card-icon"><i class="fas fa-wind"></i></div>
+                <h3>Hurricane</h3>
+                <p>Violent tropical storm with high winds, heavy rainfall, and potential storm surges.</p>
+                <button class="btn small" onclick="showDetails('hurricane')">Learn More</button>
+            </div>
+            <div class="card" data-disaster="wildfire">
+                <div class="card-icon"><i class="fas fa-fire"></i></div>
+                <h3>Wildfire</h3>
+                <p>Uncontrolled fire that spreads rapidly through vegetation in rural or forest areas.</p>
+                <button class="btn small" onclick="showDetails('wildfire')">Learn More</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="symptoms" class="symptoms-section">
+        <h2 class="section-title">Symptom Checker</h2>
+        <div class="symptom-checker">
+            <div class="checker-intro">
+                <h3>Check Your Symptoms</h3>
+                <p>Answer a series of related questions to help identify potential issues. This is not a substitute for
+                    professional medical advice.</p>
+            </div>
+
+            <div class="symptom-questionnaire">
+                <div class="question-container active" id="question-1">
+                    <h4>Question 1: How are you feeling overall?</h4>
+                    <div class="options-container">
+                        <button class="option-btn" onclick="selectOption(1, 'feeling', 'Fine')">Fine, just
+                            checking</button>
+                        <button class="option-btn" onclick="selectOption(1, 'feeling', 'Slightly unwell')">Slightly
+                            unwell</button>
+                        <button class="option-btn" onclick="selectOption(1, 'feeling', 'Very sick')">Very sick</button>
+                        <button class="option-btn" onclick="selectOption(1, 'feeling', 'Emergency')">I need emergency
+                            help</button>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-2">
+                    <h4>Question 2: What are your main symptoms?</h4>
+                    <div class="options-container">
+                        <button class="option-btn" onclick="selectOption(2, 'mainSymptom', 'Respiratory')">Respiratory
+                            issues (cough, breathing difficulty)</button>
+                        <button class="option-btn" onclick="selectOption(2, 'mainSymptom', 'Digestive')">Digestive
+                            issues (nausea, vomiting, diarrhea)</button>
+                        <button class="option-btn" onclick="selectOption(2, 'mainSymptom', 'Neurological')">Neurological
+                            issues (headache, dizziness)</button>
+                        <button class="option-btn" onclick="selectOption(2, 'mainSymptom', 'Skin')">Skin issues (rash,
+                            irritation)</button>
+                        <button class="option-btn" onclick="selectOption(2, 'mainSymptom', 'Pain')">Pain (muscle, joint,
+                            etc.)</button>
+                        <button class="option-btn" onclick="selectOption(2, 'mainSymptom', 'Fever')">Fever</button>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-respiratory">
+                    <h4>Respiratory Symptoms:</h4>
+                    <div class="options-container">
+                        <button class="option-btn" onclick="selectOption(3, 'respiratoryDetail', 'Dry cough')">Dry
+                            cough</button>
+                        <button class="option-btn" onclick="selectOption(3, 'respiratoryDetail', 'Wet cough')">Wet cough
+                            with phlegm</button>
+                        <button class="option-btn"
+                            onclick="selectOption(3, 'respiratoryDetail', 'Shortness of breath')">Shortness of
+                            breath</button>
+                        <button class="option-btn"
+                            onclick="selectOption(3, 'respiratoryDetail', 'Wheezing')">Wheezing</button>
+                        <button class="option-btn" onclick="selectOption(3, 'respiratoryDetail', 'Sore throat')">Sore
+                            throat</button>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-digestive">
+                    <h4>Digestive Symptoms:</h4>
+                    <div class="options-container">
+                        <button class="option-btn"
+                            onclick="selectOption(3, 'digestiveDetail', 'Nausea')">Nausea</button>
+                        <button class="option-btn"
+                            onclick="selectOption(3, 'digestiveDetail', 'Vomiting')">Vomiting</button>
+                        <button class="option-btn"
+                            onclick="selectOption(3, 'digestiveDetail', 'Diarrhea')">Diarrhea</button>
+                        <button class="option-btn"
+                            onclick="selectOption(3, 'digestiveDetail', 'Abdominal pain')">Abdominal pain</button>
+                        <button class="option-btn" onclick="selectOption(3, 'digestiveDetail', 'Loss of appetite')">Loss
+                            of appetite</button>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-duration">
+                    <h4>Question 3: How long have you been experiencing these symptoms?</h4>
+                    <div class="options-container">
+                        <button class="option-btn" onclick="selectOption(4, 'duration', 'Today')">Just started
+                            today</button>
+                        <button class="option-btn" onclick="selectOption(4, 'duration', '2-3 days')">2-3 days</button>
+                        <button class="option-btn" onclick="selectOption(4, 'duration', '4-7 days')">4-7 days</button>
+                        <button class="option-btn" onclick="selectOption(4, 'duration', 'Week+')">More than a
+                            week</button>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-severity">
+                    <h4>Question 4: Rate the severity of your symptoms:</h4>
+                    <div class="options-container">
+                        <button class="option-btn" onclick="selectOption(5, 'severity', 'Mild')">Mild - Can perform
+                            daily activities</button>
+                        <button class="option-btn" onclick="selectOption(5, 'severity', 'Moderate')">Moderate -
+                            Difficult to perform daily activities</button>
+                        <button class="option-btn" onclick="selectOption(5, 'severity', 'Severe')">Severe - Cannot
+                            perform daily activities</button>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-results">
+                    <h4>Your Symptom Assessment Results</h4>
+                    <div id="symptom-results-content" class="results-content">
+                        <!-- Results will be dynamically inserted here -->
+                    </div>
+                    <div class="treatment-recommendations" id="treatment-recommendations">
+                        <!-- Treatment recommendations will be dynamically inserted here -->
+                    </div>
+                    <button class="btn primary" onclick="resetSymptomChecker()">Start Over</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="safety" class="safety-section">
+        <h2 class="section-title">Safety Measures</h2>
+        <div class="safety-tabs">
+            <div class="tab-headers">
+                <button class="tab-btn active" data-tab="pandemic">Pandemic</button>
+                <button class="tab-btn" data-tab="earthquake">Earthquake</button>
+                <button class="tab-btn" data-tab="flood">Flood</button>
+                <button class="tab-btn" data-tab="hurricane">Hurricane</button>
+                <button class="tab-btn" data-tab="wildfire">Wildfire</button>
+            </div>
+            <div class="tab-content">
+                <div class="tab active" id="pandemic-tab">
+                    <h3>Pandemic Safety</h3>
+                    <ul class="safety-list">
+                        <li><i class="fas fa-hands-wash"></i> Wash hands frequently with soap and water for at least 20
+                            seconds</li>
+                        <li><i class="fas fa-head-side-mask"></i> Wear a mask in crowded public spaces</li>
+                        <li><i class="fas fa-people-arrows"></i> Maintain physical distance (6 feet/2 meters) from
+                            others</li>
+                        <li><i class="fas fa-pump-medical"></i> Use hand sanitizer when soap and water aren't available
+                        </li>
+                        <li><i class="fas fa-house-user"></i> Stay home if feeling unwell</li>
+                        <li><i class="fas fa-syringe"></i> Get vaccinated when eligible</li>
+                        <li><i class="fas fa-box-tissue"></i> Cover coughs and sneezes with a tissue or elbow</li>
+                    </ul>
+                </div>
+                <div class="tab" id="earthquake-tab">
+                    <h3>Earthquake Safety</h3>
+                    <ul class="safety-list">
+                        <li><i class="fas fa-table"></i> Drop, cover, and hold on under sturdy furniture</li>
+                        <li><i class="fas fa-door-open"></i> Stay away from windows, outside doors, and walls</li>
+                        <li><i class="fas fa-building"></i> If outdoors, move to an open area away from buildings</li>
+                        <li><i class="fas fa-car-side"></i> If in a vehicle, pull over safely away from buildings and
+                            trees</li>
+                        <li><i class="fas fa-fire-extinguisher"></i> After shaking stops, check for fires or gas leaks
+                        </li>
+                        <li><i class="fas fa-toolbox"></i> Have an emergency kit prepared</li>
+                        <li><i class="fas fa-clipboard-list"></i> Create a family emergency plan</li>
+                    </ul>
+                </div>
+                <div class="tab" id="flood-tab">
+                    <h3>Flood Safety</h3>
+                    <ul class="safety-list">
+                        <li><i class="fas fa-cloud-showers-heavy"></i> Monitor weather reports and flood warnings</li>
+                        <li><i class="fas fa-level-up-alt"></i> Move to higher ground if flooding threatens</li>
+                        <li><i class="fas fa-water"></i> Never walk, swim, or drive through flood waters</li>
+                        <li><i class="fas fa-gas-pump"></i> Turn off utilities at main switches if instructed</li>
+                        <li><i class="fas fa-battery-full"></i> Keep emergency supplies ready including water</li>
+                        <li><i class="fas fa-broadcast-tower"></i> Have a battery-powered radio for updates</li>
+                        <li><i class="fas fa-route"></i> Know evacuation routes in your area</li>
+                    </ul>
+                </div>
+                <div class="tab" id="hurricane-tab">
+                    <h3>Hurricane Safety</h3>
+                    <ul class="safety-list">
+                        <li><i class="fas fa-home"></i> Secure your home: board windows and secure outdoor items</li>
+                        <li><i class="fas fa-gas-pump"></i> Fill your vehicle's gas tank and get extra fuel for
+                            generators</li>
+                        <li><i class="fas fa-shopping-basket"></i> Stock up on non-perishable food and water</li>
+                        <li><i class="fas fa-first-aid"></i> Prepare emergency medical supplies and prescriptions</li>
+                        <li><i class="fas fa-charging-station"></i> Charge electronic devices fully</li>
+                        <li><i class="fas fa-map-marked-alt"></i> Know your evacuation zone and route</li>
+                        <li><i class="fas fa-battery-full"></i> Have battery-powered flashlights and radio ready</li>
+                    </ul>
+                </div>
+                <div class="tab" id="wildfire-tab">
+                    <h3>Wildfire Safety</h3>
+                    <ul class="safety-list">
+                        <li><i class="fas fa-bell"></i> Stay alert to emergency notifications and evacuation orders</li>
+                        <li><i class="fas fa-car"></i> Keep your vehicle fueled and ready for evacuation</li>
+                        <li><i class="fas fa-map-marked-alt"></i> Know multiple evacuation routes from your neighborhood
+                        </li>
+                        <li><i class="fas fa-house-user"></i> Create defensible space around your home</li>
+                        <li><i class="fas fa-lungs"></i> Stay indoors to reduce smoke exposure</li>
+                        <li><i class="fas fa-filter"></i> Use air purifiers if available</li>
+                        <li><i class="fas fa-mask"></i> Wear an N95 mask outdoors during active fires</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="alerts" class="alerts-section">
+        <h2 class="section-title">Current Alerts</h2>
+        <div class="alerts-container">
+            <div class="alert-controls">
+                <div class="location-selector">
+                    <label for="location">Your Location:</label>
+                    <input type="text" id="location" placeholder="Enter city name">
+                    <button class="btn small" onclick="getAlerts()"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="alert-filter">
+                    <label>Filter by:</label>
+                    <select id="alertFilter" onchange="filterAlerts()">
+                        <option value="all">All Alerts</option>
+                        <option value="pandemic">Pandemic</option>
+                        <option value="weather">Weather</option>
+                        <option value="geological">Geological</option>
+                    </select>
+                </div>
+            </div>
+            <div class="alerts-list" id="alertsList">
+                <p class="alert-message">Enter your location to see relevant alerts</p>
+                <!-- Alert items will be dynamically added here -->
+            </div>
+        </div>
+    </section>
+
+    <section id="awareness" class="awareness-section">
+        <h2 class="section-title">Awareness & Education</h2>
+        <div class="awareness-container">
+            <div class="awareness-content">
+                <div id="awareness-slides" class="awareness-slides">
+                    <!-- Slide 1 -->
+                    <div class="awareness-slide active" data-slide="1">
+                        <div class="slide-content">
+                            <div class="slide-image">
+                                <img src="https://placehold.co/600x400/4361ee/ffffff?text=Pandemic+Preparedness"
+                                    alt="Pandemic Preparedness">
+                            </div>
+                            <div class="slide-text">
+                                <h3>Pandemic Preparedness</h3>
+                                <p>Being prepared for a pandemic involves having essential supplies, creating an
+                                    emergency plan, and staying informed about local health guidelines.</p>
+                                <ul>
+                                    <li>Stock up on non-perishable food and water</li>
+                                    <li>Maintain a supply of necessary medications</li>
+                                    <li>Have personal protective equipment available</li>
+                                    <li>Create a communication plan with family members</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="awareness-slide" data-slide="2">
+                        <div class="slide-content">
+                            <div class="slide-image">
+                                <img src="https://placehold.co/600x400/f72585/ffffff?text=Disaster+Kits"
+                                    alt="Emergency Disaster Kits">
+                            </div>
+                            <div class="slide-text">
+                                <h3>Emergency Disaster Kits</h3>
+                                <p>Having a well-stocked emergency kit can be life-saving during disasters when
+                                    resources become scarce or inaccessible.</p>
+                                <ul>
+                                    <li>First aid supplies</li>
+                                    <li>Flashlights and batteries</li>
+                                    <li>Portable radio</li>
+                                    <li>Emergency blankets</li>
+                                    <li>Cash and important documents</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3 -->
+                    <div class="awareness-slide" data-slide="3">
+                        <div class="slide-content">
+                            <div class="slide-image">
+                                <img src="https://placehold.co/600x400/38b000/ffffff?text=Community+Response"
+                                    alt="Community Response">
+                            </div>
+                            <div class="slide-text">
+                                <h3>Community Response Planning</h3>
+                                <p>Communities that plan and prepare together are more resilient during disasters. Learn
+                                    how to contribute to your local community's emergency preparedness.</p>
+                                <ul>
+                                    <li>Know your community evacuation routes</li>
+                                    <li>Participate in community emergency drills</li>
+                                    <li>Support vulnerable neighbors during emergencies</li>
+                                    <li>Learn about local emergency resources</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 4 -->
+                    <div class="awareness-slide" data-slide="4">
+                        <div class="slide-content">
+                            <div class="slide-image">
+                                <img src="https://placehold.co/600x400/ffb700/ffffff?text=Mental+Health"
+                                    alt="Mental Health">
+                            </div>
+                            <div class="slide-text">
+                                <h3>Mental Health During Disasters</h3>
+                                <p>Disasters and pandemics can take a significant toll on mental health. Learn
+                                    strategies for maintaining psychological well-being during crises.</p>
+                                <ul>
+                                    <li>Practice stress-reduction techniques</li>
+                                    <li>Maintain social connections safely</li>
+                                    <li>Limit exposure to distressing news</li>
+                                    <li>Know when and how to seek professional help</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pagination-controls">
+                    <button class="pagination-arrow prev" onclick="changeAwarenessSlide('prev')">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+
+                    <div class="pagination-indicators">
+                        <span class="indicator active" data-slide="1" onclick="goToAwarenessSlide(1)"></span>
+                        <span class="indicator" data-slide="2" onclick="goToAwarenessSlide(2)"></span>
+                        <span class="indicator" data-slide="3" onclick="goToAwarenessSlide(3)"></span>
+                        <span class="indicator" data-slide="4" onclick="goToAwarenessSlide(4)"></span>
+                    </div>
+
+                    <button class="pagination-arrow next" onclick="changeAwarenessSlide('next')">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-shield-virus"></i>
+                <h2>SafeGuard</h2>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#disasters">Disasters</a></li>
+                    <li><a href="#symptoms">Symptoms</a></li>
+                    <li><a href="#safety">Safety</a></li>
+                    <li><a href="#alerts">Alerts</a></li>
+                </ul>
+            </div>
+            <div class="footer-resources">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="https://www.who.int/" target="_blank">World Health Organization</a></li>
+                    <li><a href="https://www.cdc.gov/" target="_blank">Centers for Disease Control</a></li>
+                    <li><a href="https://www.redcross.org/" target="_blank">Red Cross</a></li>
+                    <li><a href="https://www.ready.gov/" target="_blank">Ready.gov</a></li>
+                </ul>
+            </div>
+            <div class="footer-subscribe">
+                <h3>Stay Updated</h3>
+                <p>Subscribe to receive alerts and safety information directly to your email</p>
+                <div class="subscribe-form">
+                    <input type="email" placeholder="Your email address">
+                    <button class="btn small">Subscribe</button>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 SafeGuard. All rights reserved. For educational purposes only.</p>
+            <p class="disclaimer">This website provides general information and is not a substitute for professional
+                medical or safety advice.</p>
+        </div>
+    </footer>
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/alert.js"></script>
+</body>
+
+</html>
