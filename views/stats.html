@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pandemic Impact Dashboard - Pandemic Response</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/firstPage.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.2.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="/css/stats.css" />
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="logo" onclick="window.location.href='/'">
+      <img src="/images/logo.png" alt="Pandemic Response Logo" class="logo-img" />
+    </div>
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-links">
+        <a href="/" class="sidebar-link"
+          ><i class="fa-solid fa-home"></i> Home</a
+        >
+        <a href="/firstPage" class="sidebar-link"
+          ><i class="fa-solid fa-virus"></i> Dashboard</a
+        >
+        <a href="/pandamic" class="sidebar-link"
+          ><i class="fa-solid fa-virus"></i> Live Pandemic Stats</a
+        >
+        <a href="/request" class="sidebar-link"
+          ><i class="fa-solid fa-box-open"></i> Need Resources</a
+        >
+        <a href="/map" class="sidebar-link"
+          ><i class="fa-solid fa-hospital"></i> Find Hospitals</a
+        >
+        <a href="/stats" class="sidebar-link"
+          ><i class="fa-solid fa-chart-pie"></i> Graph Analytics</a
+        >
+        <a href="/organizations" class="sidebar-link"
+          ><i class="fa-solid fa-building"></i> Organizations</a
+        >
+        <a href="/org-dashboard" class="sidebar-link"
+          ><i class="fa-solid fa-tachometer-alt"></i> Org Dashboard</a
+        >
+        <a href="/user-dashboard" class="sidebar-link"
+          ><i class="fa-solid fa-user"></i> User Dashboard</a
+        >
+        <a href="/alerts" class="sidebar-link"
+        ><i class="fa-solid fa-alert"></i> Alerts</a
+      >
+        <a href="/profile" class="sidebar-link"
+          ><i class="fa-solid fa-id-card"></i> Profile</a
+        >
+      </div>
+      <div class="user-profile">
+        <img
+          src="/default-user.png"
+          alt="User Photo"
+          id="user-photo"
+          class="user-photo"
+          onclick="toggleSidebarMobile()"
+        />
+        <div class="user-info">
+          <span id="user-name">User Name</span>
+          <!-- <span id="user-email">user@example.com</span> -->
+        </div>
+        <button class="profile-btn" onclick="window.location.href='/profile'">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-toggle" onclick="toggleSidebarMobile()">
+      <i class="fa-solid fa-bars mobile-hamburger"></i>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content main-dashboard">
+      <div class="controls">
+        <select id="country-select">
+          <option value="" disabled selected>Select a country</option>
+        </select>
+        <select id="time-filter">
+          <option value="7">Last 7 Days</option>
+          <option value="30" selected>Last 30 Days</option>
+          <option value="all">All Time</option>
+        </select>
+        <button class="control-btn" onclick="exportReport()">
+          <i class="fa-solid fa-download"></i> Download Report
+        </button>
+      </div>
+
+      <section class="stats-section">
+        <h2><i class="fa-solid fa-virus"></i> Live Statistics</h2>
+        <div class="stats-container">
+          <div class="stats-card" id="live-cases">
+            <h3>Live Cases</h3>
+            <p id="live-cases-count">Loading...</p>
+          </div>
+          <div class="stats-card" id="vaccinated">
+            <h3>Vaccinated</h3>
+            <p id="vaccinated-count">Loading...</p>
+          </div>
+          <div class="stats-card" id="recovered">
+            <h3>Recovered</h3>
+            <p id="recovered-count">Loading...</p>
+          </div>
+          <div class="stats-card" id="deaths">
+            <h3>Deaths</h3>
+            <p id="deaths-count">Loading...</p>
+          </div>
+        </div>
+        <div class="graph-card">
+          <canvas id="stats-doughnut"></canvas>
+        </div>
+      </section>
+
+      <section class="graph-section">
+        <h2><i class="fa-solid fa-heartbeat"></i> Healthcare Capacity</h2>
+        <div class="graph-card">
+          <canvas id="healthcare-chart"></canvas>
+        </div>
+      </section>
+
+      <section class="graph-section">
+        <h2><i class="fa-solid fa-chart-line"></i> Economic Impact</h2>
+        <div class="graph-card">
+          <canvas id="economy-chart"></canvas>
+        </div>
+      </section>
+
+      <section class="graph-section">
+        <h2><i class="fa-solid fa-chart-area"></i> Predictive Analysis</h2>
+        <div class="graph-card">
+          <canvas id="predictive-chart"></canvas>
+        </div>
+      </section>
+    </main>
+
+    <!-- Popup -->
+    <div class="grey"></div>
+    <div class="popup" id="popup">
+      <span class="popup-text" id="popup-text"></span>
+      <button class="close-popup" id="close-popup">Close</button>
+    </div>
+
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/firstPage.js"></script>
+    <script src="/js/stats.js"></script>
+  </body>
+</html>

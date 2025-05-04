@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Profile - Pandemic Response</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/firstPage.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+    <link rel="stylesheet" href="/css/updateProfile.css" />
+  </head>
+  <body>
+    <!-- Sidebar (Consistent Across All Pages) -->
+    <div class="logo" onclick="window.location.href='/'">
+      <img src="/images/logo.png" alt="Pandemic Response Logo" class="logo-img" />
+    </div>
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-links">
+        <a href="/" class="sidebar-link"
+          ><i class="fa-solid fa-home"></i> Home</a
+        >
+        <a href="/firstPage" class="sidebar-link"
+          ><i class="fa-solid fa-virus"></i> Dashboard</a
+        >
+        <a href="/pandamic" class="sidebar-link"
+          ><i class="fa-solid fa-virus"></i> Live Pandemic Stats</a
+        >
+        <a href="/request" class="sidebar-link"
+          ><i class="fa-solid fa-box-open"></i> Need Resources</a
+        >
+        <a href="/map" class="sidebar-link"
+          ><i class="fa-solid fa-hospital"></i> Find Hospitals</a
+        >
+        <a href="/stats" class="sidebar-link"
+          ><i class="fa-solid fa-chart-pie"></i> Graph Analytics</a
+        >
+        <a href="/organizations" class="sidebar-link"
+          ><i class="fa-solid fa-building"></i> Organizations</a
+        >
+        <a href="/org-dashboard" class="sidebar-link"
+          ><i class="fa-solid fa-tachometer-alt"></i> Org Dashboard</a
+        >
+        <a href="/user-dashboard" class="sidebar-link"
+          ><i class="fa-solid fa-user"></i> User Dashboard</a
+        >
+        <a href="/alerts" class="sidebar-link"
+        ><i class="fa-solid fa-alert"></i> Alerts</a
+      >
+        <a href="/profile" class="sidebar-link"
+          ><i class="fa-solid fa-id-card"></i> Profile</a
+        >
+      </div>
+      <div class="user-profile">
+        <img
+          src="/images/logohaire.png"
+          alt="User Photo"
+          id="user-photo"
+          class="user-photo"
+          onclick="toggleSidebarMobile()"
+        />
+        <div class="user-info">
+          <span id="user-name">User Name</span>
+          <!-- <span id="user-email">user@example.com</span> -->
+        </div>
+        <button class="profile-btn" onclick="window.location.href='/profile'">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-toggle" onclick="toggleSidebarMobile()">
+      <i class="fa-solid fa-bars mobile-hamburger"></i>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="profile-container">
+        <!-- Left Side: Profile Image -->
+        <div class="profile-left">
+          <img
+            src="/images/logohaire.png"
+            alt="Profile Picture"
+            id="profilePic"
+            class="profile-pic"
+            onclick="showImageOptions()"
+          />
+          <div class="image-options" id="imageOptions">
+            <button onclick="viewImage()">View Image</button>
+            <button onclick="updateImage()">Update Image</button>
+          </div>
+        </div>
+
+        <!-- Right Side: Profile Information -->
+        <div class="profile-right">
+          <h2><i class="fa-solid fa-user"></i> Update Profile</h2>
+          <div class="info-row">
+            <label for="fullName">Full Name:</label>
+            <div class="input-group">
+              <i class="fa-solid fa-user"></i>
+              <input
+                type="text"
+                id="fullName"
+                placeholder="Full Name"
+                disabled
+              />
+            </div>
+            <span class="edit-icon" onclick="enableEdit('fullName')"
+              ><i class="fa-solid fa-pencil-alt"></i
+            ></span>
+          </div>
+          <div class="info-row">
+            <label for="userName">Username:</label>
+            <div class="input-group">
+              <i class="fa-solid fa-at"></i>
+              <input
+                type="text"
+                id="userName"
+                placeholder="Username"
+                disabled
+              />
+            </div>
+            <span class="edit-icon" onclick="enableEdit('userName')"
+              ><i class="fa-solid fa-pencil-alt"></i
+            ></span>
+          </div>
+          <div class="info-row">
+            <label for="email">Email:</label>
+            <div class="input-group">
+              <i class="fa-solid fa-envelope"></i>
+              <input type="email" id="email" placeholder="Email" disabled />
+            </div>
+            <span class="edit-icon" onclick="enableEdit('email')"
+              ><i class="fa-solid fa-pencil-alt"></i
+            ></span>
+          </div>
+          <div class="info-row">
+            <label for="phone">Phone:</label>
+            <div class="input-group">
+              <i class="fa-solid fa-phone"></i>
+              <input
+                type="tel"
+                id="phone"
+                placeholder="Phone Number"
+                disabled
+              />
+            </div>
+            <span class="edit-icon" onclick="enableEdit('phone')"
+              ><i class="fa-solid fa-pencil-alt"></i
+            ></span>
+          </div>
+        </div>
+
+        <!-- Achievements Section -->
+        <div class="badges-section">
+          <h3><i class="fa-solid fa-trophy"></i> Achievements</h3>
+          <div class="badges" id="badges">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button class="save-btn" onclick="saveChanges()">Save Changes</button>
+          <button class="cancel-btn" onclick="cancelChanges()">Cancel</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Badge Popup -->
+    <div class="grey"></div>
+    <div class="popup" id="badgePopup">
+      <div class="popup-content">
+        <h3 id="badgeTitle">Badge Title</h3>
+        <p id="badgeDescription">Badge description goes here.</p>
+        <button class="close-popup" onclick="closePopup()">Close</button>
+      </div>
+    </div>
+
+    <script src="/js/firstPage.js"></script>
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/updateProfile.js"></script>
+  </body>
+</html>
